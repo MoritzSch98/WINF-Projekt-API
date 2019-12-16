@@ -18,14 +18,16 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import com.example.gewerbeanmeldung.AnswerOfAnswers.AnswerOfAnswers;
 import com.example.gewerbeanmeldung.FormFilled.FormFilled;
+import com.example.gewerbeanmeldung.dbfile.DatabaseFile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "Answers")
+@Table(name = "Answers", uniqueConstraints = {@UniqueConstraint(columnNames={"question_id"})})
 public class Answers {
 
 	@Id
@@ -33,7 +35,7 @@ public class Answers {
 	@Column(name = "id")
 	private Integer id;
 
-
+	@Column(columnDefinition = "Integer not null", unique = true)
 	private Integer question_id;
 	
 	@NotNull
@@ -41,6 +43,9 @@ public class Answers {
 	
 	@Basic
 	private java.sql.Date dateanswer;
+	
+	@OneToMany(mappedBy="answers")
+	private List<DatabaseFile> fileanswer;
 	
 	@OneToMany(mappedBy="answers")
 	private List<AnswerOfAnswers> aoa;
@@ -107,5 +112,14 @@ public class Answers {
 	public void setAoa(List<AnswerOfAnswers> aoa) {
 		this.aoa = aoa;
 	}
+
+	public List<DatabaseFile> getFileanswer() {
+		return fileanswer;
+	}
+
+	public void setFileanswer(List<DatabaseFile> fileanswer) {
+		this.fileanswer = fileanswer;
+	}
+	
 	
 }

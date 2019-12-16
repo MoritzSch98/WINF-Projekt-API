@@ -21,7 +21,7 @@ public class AnswersController {
 
 	// Gets all Filled Forms
 	@RequestMapping(method = RequestMethod.POST, path = "forms/{form_id}/question/{question_id}/answers/add")
-	public Answers addAnswerToForm(@RequestBody Answers answer, @PathVariable Integer form_id,@PathVariable Integer question_id) {
+	public String addAnswerToForm(@RequestBody Answers answer, @PathVariable Integer form_id,@PathVariable Integer question_id) {
 		return answerService.addAnswer(answer,form_id, question_id);
 	}
 }
