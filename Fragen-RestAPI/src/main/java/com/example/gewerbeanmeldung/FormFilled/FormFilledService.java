@@ -34,4 +34,8 @@ public class FormFilledService {
 	public FormFilled getFilledForm(Integer form_id) {
 		return	formsFilledRepo.findById(form_id).orElse(null);
 	}
+	
+	public boolean checkFormExisting(Integer form_id) {
+		return formsFilledRepo.existsById(form_id);
+	}
 }

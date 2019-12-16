@@ -187,11 +187,19 @@ public class QuestionService {
 		return "You added the following questions for this question sucessfully. Please note: if you have "
 				+ "any choices, the NextQuestionId of the QuestionType was set to -1";
 	}
+	
+	// If different choices exists for a specific question, then set the next id to -1. So you know,
+	// you should look for the choice next-id
 	public boolean checkForNextQuestionIdPlace(Question question) {
 		if(question.getQuestionType().getNextQuestionId() != 0 && question.getQuestionType().getNextQuestionId() != -1) {
 			return true;
 		}else { 
 			return false;
 		}
+	}
+	
+	
+	public boolean checkIfQuestionExists(Integer question_id) {
+		return questionRepo.existsById(question_id);
 	}
 }

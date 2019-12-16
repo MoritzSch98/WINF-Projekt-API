@@ -1,7 +1,5 @@
 package com.example.gewerbeanmeldung.Answers;
 
-import java.sql.SQLIntegrityConstraintViolationException;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,14 +26,24 @@ public class AnswersService {
 
 	public String addAnswer(Answers answer, Integer form_id, Integer question_id) {
 		
-		if(checkAnswerForQuestionExisting(question_id)) {
-			return "this answer is alreay existing. You can't add it twice, but you can edit";
+		
+		if(ffService.checkFormExisting(form_id)) {
+			 FormFilled ff = ffService.getFilledForm(form_id);
+			 answer.setFormFilled(ff);
+		}else {
+			return "The form you try to add an answer to, is not existing, please add the form first";
+		}
+		if(checkAnswerForQuestionIdExisting(question_id)) {
+			return "this answer is alreay existing for this form. You can't add it twice, but you can edit";
 		}
 		
-		FormFilled ff = ffService.getFilledForm(form_id);
-		answer.setQuestion_id(question_id);
-		answer = findAnswerType(answer, question_id);
-		answer.setFormFilled(ff);
+		if(qService.checkIfQuestionExists(question_id)) {
+			answer.setQuestion_id(question_id);
+			answer = findAnswerType(answer, question_id);
+		}else {
+			return "This question you try to add an answer to, is not existing!";
+		}
+		
 		
 		List<AnswerOfAnswers> aoaList = answer.getAoa();
 		for(int i = 0; i < aoaList.size(); i++) {
@@ -48,7 +56,8 @@ public class AnswersService {
 		}catch(Exception e) {
 			return e.getMessage();
 		}
-		return "You saved the answer successful";
+		Integer nextQuestion = changesQuestionFlow(answer, question_id);
+		return "You saved the answer successful, the next Question is the question with the Id: "+ nextQuestion;
 	}
 	
 	public Answers getAnswer(Integer answerId) {
@@ -108,13 +117,45 @@ public class AnswersService {
 		return a;
 	}
 	
-	public boolean checkAnswerForQuestionExisting(Integer question_id) {
+	public boolean checkAnswerForQuestionIdExisting(Integer question_id) {
 		Answers a = answerRepo.findByQuestionId(question_id);
 		if(a == null) {
 			return false;
 		}else {
 			return true;
 		}
+	}
+	
+	
+	//Looks if the question flow is changed and returns the next questionid, 
+	//which needs to be displayed
+	public Integer changesQuestionFlow(Answers a, Integer question_id) {
+		
+		Integer nextQuestion = null;
+		Question q = qService.getQuestionById(question_id);
+		
+		//Checks if we need to look for the NextQuestionId within the chosen choice
+		//Indirectly we now know that this question is a question, where we can chose only one
+		//out of many options. Multi select or Date or File upload is not allowed
+		//so we just need to look at the very first element of aoa within the answer to get the made input
+		//also its not a free text input. Has to be Dropdown or RadioButton
+		if(q.getQuestionType().getNextQuestionId() == -1) {
+			String input = a.getAoa().get(0).getAnswer();
+			int i = 0;
+			
+			//Try to find the matching choice for the answer and saves the nextQuestion of it, 
+			//to be returned soon
+			while(i < q.getQuestionType().getChoices().size()) {
+				if(q.getQuestionType().getChoices().get(i).getChoice().equals(input)) {
+					nextQuestion = q.getQuestionType().getChoices().get(i).getNextQuestionId();
+				}
+				i++;
+			}
+		}else {
+			nextQuestion = q.getQuestionType().getNextQuestionId();
+		}
+		
+		return nextQuestion;
 	}
 	
 }
