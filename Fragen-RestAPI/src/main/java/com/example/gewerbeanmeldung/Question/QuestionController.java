@@ -24,6 +24,8 @@ public class QuestionController {
 		return questionService.getAllQuestions();
 	}
 
+	
+	
 	// Get a specific Question by ID
 	@RequestMapping(path = "frage/{id}")
 	public Question getQuestionById(@PathVariable Integer id) {
