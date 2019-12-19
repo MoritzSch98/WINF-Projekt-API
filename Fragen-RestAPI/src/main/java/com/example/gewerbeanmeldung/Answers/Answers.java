@@ -27,7 +27,7 @@ import com.example.gewerbeanmeldung.dbfile.DatabaseFile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
-@Table(name = "Answers", uniqueConstraints = {@UniqueConstraint(columnNames={"question_id"})})
+@Table(name = "Answers", uniqueConstraints = {@UniqueConstraint(columnNames={"question_id", "formFilled_id"})})
 public class Answers {
 
 	@Id
@@ -35,7 +35,7 @@ public class Answers {
 	@Column(name = "id")
 	private Integer id;
 
-	@Column(columnDefinition = "Integer not null", unique = true)
+	@Column(columnDefinition = "Integer not null")
 	private Integer question_id;
 	
 	@NotNull

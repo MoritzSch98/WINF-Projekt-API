@@ -26,14 +26,16 @@ public class AnswersService {
 
 	public String addAnswer(Answers answer, Integer form_id, Integer question_id) {
 		
-		
+		FormFilled ff = new FormFilled();
+
 		if(ffService.checkFormExisting(form_id)) {
-			 FormFilled ff = ffService.getFilledForm(form_id);
+			 ff = ffService.getFilledForm(form_id);
 			 answer.setFormFilled(ff);
 		}else {
 			return "The form you try to add an answer to, is not existing, please add the form first";
 		}
-		if(checkAnswerForQuestionIdExisting(question_id)) {
+
+		if(checkAnswerForQuestionIdExisting(question_id, ff)) {
 			return "this answer is alreay existing for this form. You can't add it twice, but you can edit";
 		}
 		
@@ -117,12 +119,13 @@ public class AnswersService {
 		return a;
 	}
 	
-	public boolean checkAnswerForQuestionIdExisting(Integer question_id) {
-		Answers a = answerRepo.findByQuestionId(question_id);
-		if(a == null) {
-			return false;
-		}else {
+	//Checks if answer exists for a question id and formfilled combination
+	public boolean checkAnswerForQuestionIdExisting(Integer question_id, FormFilled ff) {
+		Answers a = answerRepo.findByQuestionId(question_id, ff);
+		if(a != null && a.getFormFilled().equals(ff)){
 			return true;
+		}else {
+			return false;
 		}
 	}
 	
@@ -139,7 +142,7 @@ public class AnswersService {
 		//out of many options. Multi select or Date or File upload is not allowed
 		//so we just need to look at the very first element of aoa within the answer to get the made input
 		//also its not a free text input. Has to be Dropdown or RadioButton
-		if(q.getQuestionType().getNextQuestionId() == -1) {
+		if(!(q.getQuestionType().isUseDefault())) {
 			String input = a.getAoa().get(0).getAnswer();
 			int i = 0;
 			
@@ -152,7 +155,7 @@ public class AnswersService {
 				i++;
 			}
 		}else {
-			nextQuestion = q.getQuestionType().getNextQuestionId();
+			nextQuestion = q.getQuestionType().getDefaultWay();
 		}
 		
 		return nextQuestion;

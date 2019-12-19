@@ -101,9 +101,14 @@ public class QuestionService {
 		// Gets all old Data of the Question, which is going to be updated
 		Question q = getQuestionById(id);
 
-		//Check if we need to edit the formtype
+		//Check if we need to edit the form and formtype
 		if(!(question.getFormType().equals(q.getFormType()))){
 			formService.editForm(question.getFormType(), q.getFormType());
+		}
+		
+		//Check if Lookback exists in already saved data, if yes, we need to add it
+		if(question.getLookbackId() == 0 && q.getLookbackId() != 0) {
+			question.setLookbackId(q.getLookbackId());
 		}
 		
 		//If no new default way was chosen, use the old existing one

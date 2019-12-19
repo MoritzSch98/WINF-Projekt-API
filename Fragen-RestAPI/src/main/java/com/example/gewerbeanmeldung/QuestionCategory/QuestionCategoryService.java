@@ -22,4 +22,11 @@ public class QuestionCategoryService {
 		QuestionCategory qc = questionCategoryRepo.findByCategory(category);
 		return qc.getQuestions();
 	}
+
+	public List<QuestionCategory> getAllCategories() {
+		List<QuestionCategory> qcs = new ArrayList<>();
+		questionCategoryRepo.findAll().forEach(qcs::add);
+		
+		return qcs;
+	}
 }

@@ -33,6 +33,11 @@ public class Question {
 	@OneToOne(cascade = CascadeType.ALL)
 	@MapsId
 	private QuestionType questionType;
+	
+	@NotNull
+	private boolean mandatory;
+	
+	private Integer lookbackId = 0;
 
 	private String hint;
 
@@ -101,4 +106,21 @@ public class Question {
 		this.formType = formType;
 	}
 
+	public boolean isMandatory() {
+		return mandatory;
+	}
+
+	public void setMandatory(boolean mandatory) {
+		this.mandatory = mandatory;
+	}
+
+	public Integer getLookbackId() {
+		return lookbackId;
+	}
+
+	public void setLookbackId(Integer lookbackId) {
+		this.lookbackId = lookbackId;
+	}
+	
+	
 }
