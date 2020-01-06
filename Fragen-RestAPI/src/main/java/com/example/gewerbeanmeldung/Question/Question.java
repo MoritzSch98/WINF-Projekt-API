@@ -14,8 +14,10 @@ import javax.persistence.OneToOne;
 import javax.validation.constraints.NotNull;
 import javax.persistence.JoinColumn;
 
+import com.example.gewerbeanmeldung.Answers.Answers;
 import com.example.gewerbeanmeldung.QuestionCategory.QuestionCategory;
 import com.example.gewerbeanmeldung.QuestionType.QuestionType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 public class Question {
@@ -37,6 +39,7 @@ public class Question {
 	@NotNull
 	private String formType;
 
+	
 	@NotNull
 	@ManyToMany(cascade = { CascadeType.ALL })
 	@JoinTable(name = "Question_Category_Relation", joinColumns = @JoinColumn(name = "question_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))
