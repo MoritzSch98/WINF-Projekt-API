@@ -27,9 +27,6 @@ public class Form {
 	@NotNull
 	private String formname;
 	
-	@OneToMany(mappedBy="form",cascade = CascadeType.ALL)
-	@JsonIgnore
-	private List<FormFilled> formFilled;
 
 	public Form() {
 
@@ -55,13 +52,6 @@ public class Form {
 		this.formname = formname;
 	}
 
-	public List<FormFilled> getFormFilled() {
-		return formFilled;
-	}
-
-	public void setFormFilled(List<FormFilled> formFilled) {
-		this.formFilled = formFilled;
-	}
 	
 
 }

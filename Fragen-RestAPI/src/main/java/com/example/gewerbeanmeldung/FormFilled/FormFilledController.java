@@ -38,13 +38,13 @@ public class FormFilledController {
 	
 	
 	//Update
-	@RequestMapping(method = RequestMethod.PUT, path = "filled/forms/{form_id}")
+	@RequestMapping(method = RequestMethod.PUT, path = "filled/forms/{form_id}/update")
 	public void updateFormFilled(@RequestBody FormFilled formFilled, @PathVariable Integer form_id) {
 		formFilledService.updateFormFilled(form_id ,formFilled);
 	}
 	
 	//Delete
-	@RequestMapping(method = RequestMethod.DELETE, path = "filled/forms/{form_id}")
+	@RequestMapping(method = RequestMethod.DELETE, path = "filled/forms/{form_id}/delete")
 	public void deletFormFilled(@PathVariable Integer form_id) {
 		formFilledService.deleteFormFilled(form_id);
 	}	

@@ -31,7 +31,7 @@ public class FormService {
 		return formRepo.findById(id).orElse(null);
 	}
 	
-	public String addForm(Form form) {
+	public String addForm(Form form) {		
 		formRepo.save(form);
 		
 		return "saved successful";

@@ -7,12 +7,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.gewerbeanmeldung.Question.Question;
+import com.example.gewerbeanmeldung.form.Form;
+import com.example.gewerbeanmeldung.form.FormService;
 
 @Service
 public class FormFilledService {
 
 	@Autowired
 	private FormFilledRepository formsFilledRepo;
+	@Autowired
+	private FormService formService;
 
 
 	public List<FormFilled> getAllFilledForms() {
@@ -42,19 +46,12 @@ public class FormFilledService {
 
 	
 	public void updateFormFilled(Integer form_id, FormFilled formFilled) {
-		// TODO Auto-generated method stub // getAllFiledForms()  ?
-		for (int i = 0; i < getAllFilledForms().size(); i++) {
-			FormFilled form = getAllFilledForms().get(i);
-			if(form.getId().equals(form_id)) {
-				getAllFilledForms().set(i, formFilled);
-				return; 
-			}
+		formFilled.setId(form_id);
+		formsFilledRepo.save(formFilled);
 	}
-}
 
 
 	public void deleteFormFilled(Integer form_id) {
-		// TODO Auto-generated method stub
-		getAllFilledForms().removeIf(form -> form.getId().equals(form_id));
+		formsFilledRepo.deleteById(form_id);
 	}
 }

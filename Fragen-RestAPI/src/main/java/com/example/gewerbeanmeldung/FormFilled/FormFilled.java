@@ -27,9 +27,8 @@ public class FormFilled {
 	@Column(name = "id")
 	private Integer id;
 
-	@ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name="form_id", nullable=false)
-	private Form formType;
+	@NotNull
+	private Integer form;
 	
 	
 	private String fillingPerson;
@@ -43,8 +42,8 @@ public class FormFilled {
 	}
 
 
-	public FormFilled(Form formType) {
-		this.formType = formType;
+	public FormFilled(Integer form) {
+		this.form = form;
 	}
 	
 	public List<Answers> getAllAnswers() {
@@ -64,12 +63,12 @@ public class FormFilled {
 		this.id = id;
 	}
 
-	public Form getFormType() {
-		return formType;
+	public Integer getForm() {
+		return form;
 	}
 
-	public void setFormType(Form formType) {
-		this.formType = formType;
+	public void setForm(Integer form) {
+		this.form = form;
 	}
 
 	public String getFillingPerson() {
