@@ -43,6 +43,16 @@ public class DatabaseFileService {
         return dbFileRepository.findById(fileId)
                 .orElseThrow(() -> new FileNotFoundException("File not found with id " + fileId));
     }
+   
     
-    //ändern und löschen 
+    public String updateFile(String fileId, MultipartFile file, Integer answerId) {
+    	deleteFile(fileId);
+    	storeFile(file, answerId);
+    	return "saved";
+    }
+    
+    public String deleteFile(String fileId) {
+    	dbFileRepository.deleteById(fileId);
+    	return "Delete Successfull";
+    }
 }
