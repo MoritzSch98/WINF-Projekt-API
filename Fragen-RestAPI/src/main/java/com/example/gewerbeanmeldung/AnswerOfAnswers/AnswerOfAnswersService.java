@@ -24,5 +24,8 @@ public class AnswerOfAnswersService {
 	
 	//ändern, löschen, holen 
 	
-	
+	public String deleteAnswerOfAnswer(AnswerOfAnswers answerOfAnswers) {
+		aoaRepo.delete(answerOfAnswers);	
+		return "deleted";
+	}
 }

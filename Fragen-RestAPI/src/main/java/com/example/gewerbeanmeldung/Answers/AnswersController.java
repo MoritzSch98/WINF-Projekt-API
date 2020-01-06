@@ -19,7 +19,7 @@ public class AnswersController {
 	@Autowired
 	private AnswersService answerService;
 
-	// Gets all Filled Forms
+	// Posts an Answer to a Filled Form
 	@RequestMapping(method = RequestMethod.POST, path = "forms/{form_id}/question/{question_id}/answers/add")
 	public String addAnswerToForm(@RequestBody Answers answer, @PathVariable Integer form_id,@PathVariable Integer question_id) {
 		return answerService.addAnswer(answer,form_id, question_id);
@@ -31,9 +31,14 @@ public class AnswersController {
 	}
 	
 	@RequestMapping(method = RequestMethod.DELETE, path = "forms/{form_id}/question/{question_id}/answers")
-	public void deleteAnswerToForm(@RequestBody Answers answer, @PathVariable Integer form_id, @PathVariable Integer question_id) {
-		answerService.delete(answer,form_id, question_id);
+	public String deleteAnswerToForm(@RequestBody Answers answer, @PathVariable Integer form_id, @PathVariable Integer question_id) {
+		return answerService.deleteAnswerOfFormFilled(answer);
 	}
 	
 	
+	// Posts all Answers to a Filled Form
+	@RequestMapping(method = RequestMethod.POST, path = "forms/{form_id}/answers/all/add")
+	public String addAllAnswersToForm(@RequestBody List<Answers> answers, @PathVariable Integer form_id) {
+		return answerService.addAllAnswers(answers,form_id);
+	}
 }

@@ -1,21 +1,21 @@
 package com.example.gewerbeanmeldung.FormFilled;
 
-import java.util.ArrayList;
 import java.util.List;
-
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.example.gewerbeanmeldung.Answers.Answers;
 import com.example.gewerbeanmeldung.Question.*;
+import com.example.gewerbeanmeldung.form.Form;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -27,8 +27,9 @@ public class FormFilled {
 	@Column(name = "id")
 	private Integer id;
 
-	@NotNull
-	private String formType;
+	@ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name="form_id", nullable=false)
+	private Form formType;
 	
 	
 	private String fillingPerson;
@@ -42,7 +43,7 @@ public class FormFilled {
 	}
 
 
-	public FormFilled(String formType) {
+	public FormFilled(Form formType) {
 		this.formType = formType;
 	}
 	
@@ -63,11 +64,11 @@ public class FormFilled {
 		this.id = id;
 	}
 
-	public String getFormType() {
+	public Form getFormType() {
 		return formType;
 	}
 
-	public void setFormType(String formType) {
+	public void setFormType(Form formType) {
 		this.formType = formType;
 	}
 

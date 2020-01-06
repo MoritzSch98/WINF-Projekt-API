@@ -11,6 +11,7 @@ import com.example.gewerbeanmeldung.FormFilled.FormFilled;
 import com.example.gewerbeanmeldung.FormFilled.FormFilledService;
 import com.example.gewerbeanmeldung.Question.Question;
 import com.example.gewerbeanmeldung.Question.QuestionService;
+import com.example.gewerbeanmeldung.dbfile.DatabaseFile;
 
 @Service
 public class AnswersService {
@@ -24,16 +25,20 @@ public class AnswersService {
 	@Autowired
 	private QuestionService qService;
 
+	
+	//Method adding an Answer to the Database
 	public String addAnswer(Answers answer, Integer form_id, Integer question_id) {
 		
-		
+		FormFilled ff = new FormFilled();
+
 		if(ffService.checkFormExisting(form_id)) {
-			 FormFilled ff = ffService.getFilledForm(form_id);
+			 ff = ffService.getFilledForm(form_id);
 			 answer.setFormFilled(ff);
 		}else {
 			return "The form you try to add an answer to, is not existing, please add the form first";
 		}
-		if(checkAnswerForQuestionIdExisting(question_id)) {
+
+		if(checkAnswerForQuestionIdExisting(question_id, ff)) {
 			return "this answer is alreay existing for this form. You can't add it twice, but you can edit";
 		}
 		
@@ -117,12 +122,13 @@ public class AnswersService {
 		return a;
 	}
 	
-	public boolean checkAnswerForQuestionIdExisting(Integer question_id) {
-		Answers a = answerRepo.findByQuestionId(question_id);
-		if(a == null) {
-			return false;
-		}else {
+	//Checks if answer exists for a question id and formfilled combination
+	public boolean checkAnswerForQuestionIdExisting(Integer question_id, FormFilled ff) {
+		Answers a = answerRepo.findByQuestionId(question_id, ff);
+		if(a != null && a.getFormFilled().equals(ff)){
 			return true;
+		}else {
+			return false;
 		}
 	}
 	
@@ -139,7 +145,7 @@ public class AnswersService {
 		//out of many options. Multi select or Date or File upload is not allowed
 		//so we just need to look at the very first element of aoa within the answer to get the made input
 		//also its not a free text input. Has to be Dropdown or RadioButton
-		if(q.getQuestionType().getNextQuestionId() == -1) {
+		if(!(q.getQuestionType().isUseDefault())) {
 			String input = a.getAoa().get(0).getAnswer();
 			int i = 0;
 			
@@ -152,21 +158,56 @@ public class AnswersService {
 				i++;
 			}
 		}else {
-			nextQuestion = q.getQuestionType().getNextQuestionId();
+			nextQuestion = q.getQuestionType().getDefaultWay();
 		}
 		
 		return nextQuestion;
 	}
 
+	//Adding all answers to a specific formtype
+	public String addAllAnswers(List<Answers> answers, Integer form_id) {
+		int i = 0;
+		while(i < answers.size()) {
+			String returnMessage;
+			if(answers.get(i).getQuestion_id() == null) {
+				returnMessage = "not savable";
+			}else {
+				returnMessage = addAnswer(answers.get(i), form_id, answers.get(i).getQuestion_id());	
+			}
+			if(!(returnMessage.contains("You saved the answer successful"))) {
+				undoAllSaved(answers,form_id, 0, i);
+				return "You cannot save this form, cause you didn't fill everything correct. Check your Inputs.";
+			}
+			i++;
+		}
+		
+		return "successfully saved all inputs";
+	}
+
+	//This method is used, if we couldn't save all the answers out of some reason. We then want all already 
+	//made inserts to be deleted
+	private void undoAllSaved(List<Answers> answers, int form_id, int start, int end) {
+		for(int i = start; i < end; i++) {
+			answers.get(i).setFormFilled(ffService.getFilledForm(form_id));
+			deleteAnswerOfFormFilled(answers.get(i));
+		}
+		
+	} 
+	
+	//Deleting an Answer of a Formfilled 
+	public String deleteAnswerOfFormFilled(Answers answer) {
+	
+		for(int i = 0; i < answer.getAoa().size(); i++) {
+			aoaService.deleteAnswerOfAnswer(answer.getAoa().get(i));
+		}
+		answerRepo.delete(answer);
+		
+		return "answer deleted";
+	}
+	
 	public void updateAnswer(Answers answer, Integer form_id, Integer question_id) {
 		// TODO Auto-generated method stub
 		addAnswer(answer, form_id, question_id);
 		return;
 	}
-
-	public void delete(Answers answer, Integer form_id, Integer question_id) {
-		// TODO Auto-generated method stub
-		addAnswer(answer, form_id, question_id);
-	} 
-	
 }
