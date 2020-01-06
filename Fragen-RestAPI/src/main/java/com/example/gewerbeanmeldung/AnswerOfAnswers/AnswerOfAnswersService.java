@@ -18,4 +18,9 @@ public class AnswerOfAnswersService {
 	public AnswerOfAnswers addAnswerOfAnswer(AnswerOfAnswers aoa) {
 		return aoaRepo.save(aoa);
 	}
+	public String deleteAnswerOfAnswer(AnswerOfAnswers answerOfAnswers) {
+		aoaRepo.delete(answerOfAnswers);
+		
+		return "deleted";
+	}
 }

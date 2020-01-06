@@ -1,12 +1,19 @@
 package com.example.gewerbeanmeldung.form;
 
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
+
+import com.example.gewerbeanmeldung.FormFilled.FormFilled;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity
@@ -19,6 +26,10 @@ public class Form {
 
 	@NotNull
 	private String formname;
+	
+	@OneToMany(mappedBy="form",cascade = CascadeType.ALL)
+	@JsonIgnore
+	private List<FormFilled> formFilled;
 
 	public Form() {
 
@@ -43,5 +54,14 @@ public class Form {
 	public void setFormname(String formname) {
 		this.formname = formname;
 	}
+
+	public List<FormFilled> getFormFilled() {
+		return formFilled;
+	}
+
+	public void setFormFilled(List<FormFilled> formFilled) {
+		this.formFilled = formFilled;
+	}
+	
 
 }
