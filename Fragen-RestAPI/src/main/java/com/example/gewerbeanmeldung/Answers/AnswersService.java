@@ -49,13 +49,12 @@ public class AnswersService {
 			return "This question you try to add an answer to, is not existing!";
 		}
 		
-		
 		List<AnswerOfAnswers> aoaList = answer.getAoa();
 		for(int i = 0; i < aoaList.size(); i++) {
 			aoaList.get(i).setAnswers(answer);
-			aoaService.addAnswerOfAnswer(aoaList.get(i));
-			
+			aoaService.addAnswerOfAnswer(aoaList.get(i));		
 		}
+		
 		try {
 			answerRepo.save(answer);
 		}catch(Exception e) {
@@ -73,7 +72,6 @@ public class AnswersService {
 		
 		return a;
 	}
-	
 	
 	//This method is going to set the correct answertype of the question and if some other answers are in it as well,
 	//it is removing them
@@ -183,6 +181,28 @@ public class AnswersService {
 		
 		return "successfully saved all inputs";
 	}
+	
+	//Edit all answers to a specific formtype
+		public String editAllAnswers(List<Answers> answers, Integer form_id) {
+			int i = 0;
+			while(i < answers.size()) {
+				String returnMessage;
+				if(answers.get(i).getQuestion_id() == null) {
+					returnMessage = "not editable";
+				}else {
+					FormFilled ff = ffService.getFilledForm(form_id);
+					Answers a = answerRepo.findByQuestionId(answers.get(i).getQuestion_id(), ff);
+					returnMessage = updateAnswer(answers.get(i), form_id, answers.get(i).getQuestion_id(), a.getId());	
+				}
+				if(!(returnMessage.contains("You edited the answer successful"))) {
+					undoAllSaved(answers,form_id, 0, i);
+					return "You cannot edit this form, cause you didn't fill everything correct. Check your Inputs.";
+				}
+				i++;
+			}
+			
+			return "successfully edited all inputs";
+		}
 
 	//This method is used, if we couldn't save all the answers out of some reason. We then want all already 
 	//made inserts to be deleted
@@ -204,10 +224,10 @@ public class AnswersService {
 		return "answer deleted";
 	}
 	
-	// 
-	public void updateAnswer(Answers answer, Integer form_id, Integer question_id) {
-		// TODO Auto-generated method stub
+	//Method updating an existing answer
+	public String updateAnswer(Answers answer, Integer form_id, Integer question_id, Integer answer_id) {
+		deleteAnswerOfFormFilled(getAnswer(answer_id));
 		addAnswer(answer, form_id, question_id);
-		return;
+		return "update success";
 	}
 }

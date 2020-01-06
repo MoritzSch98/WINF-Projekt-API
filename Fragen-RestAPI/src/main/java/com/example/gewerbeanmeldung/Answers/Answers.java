@@ -50,7 +50,7 @@ public class Answers {
 	@OneToMany(mappedBy="answers")
 	private List<AnswerOfAnswers> aoa;
 	
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="formFilled_id", nullable=false)
 	@JsonIgnore
     private FormFilled formFilled;

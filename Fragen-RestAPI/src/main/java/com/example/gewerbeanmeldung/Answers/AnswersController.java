@@ -25,9 +25,9 @@ public class AnswersController {
 		return answerService.addAnswer(answer,form_id, question_id);
 	}
 	
-	@RequestMapping(method = RequestMethod.PUT, path = "forms/{form_id}/question/{question_id}/answers")
-	public void updateAnswerToForm(@RequestBody Answers answer, @PathVariable Integer form_id, @PathVariable Integer question_id) {
-		answerService.updateAnswer(answer,form_id, question_id);
+	@RequestMapping(method = RequestMethod.PUT, path = "forms/{form_id}/question/{question_id}/answers/{answers_id}/edit")
+	public void updateAnswerToForm(@RequestBody Answers answer, @PathVariable Integer form_id, @PathVariable Integer question_id, @PathVariable Integer answers_id) {
+		answerService.updateAnswer(answer,form_id, question_id, answers_id);
 	}
 	
 	@RequestMapping(method = RequestMethod.DELETE, path = "forms/{form_id}/question/{question_id}/answers")
@@ -40,5 +40,11 @@ public class AnswersController {
 	@RequestMapping(method = RequestMethod.POST, path = "forms/{form_id}/answers/all/add")
 	public String addAllAnswersToForm(@RequestBody List<Answers> answers, @PathVariable Integer form_id) {
 		return answerService.addAllAnswers(answers,form_id);
+	}
+	
+	//Editing multiple Answers of a FilledForm
+	@RequestMapping(method = RequestMethod.PUT, path = "forms/{form_id}/answers/all/edit")
+	public void editAnswerToForm(@RequestBody Answers answer, @PathVariable Integer form_id, @PathVariable Integer question_id, @PathVariable Integer answer_id) {
+		answerService.updateAnswer(answer,form_id, question_id, answer_id);
 	}
 }

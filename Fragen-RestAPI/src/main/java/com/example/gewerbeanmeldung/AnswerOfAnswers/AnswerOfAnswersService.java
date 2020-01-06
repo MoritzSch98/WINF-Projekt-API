@@ -1,6 +1,8 @@
 package com.example.gewerbeanmeldung.AnswerOfAnswers;
 
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +22,10 @@ public class AnswerOfAnswersService {
 	}
 	public AnswerOfAnswers getAnswerOfAnswerById(Integer id) {
 		return aoaRepo.findById(id).orElse(null);
+	}
+	
+	public List<AnswerOfAnswers> getAllAnswerOfAnswersByAnswerId(Integer answersId){
+		return aoaRepo.findAllByAnswerId(answersId);
 	}
 	
 	//ändern, löschen, holen 
