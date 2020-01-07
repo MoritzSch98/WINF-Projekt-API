@@ -39,8 +39,11 @@ public class Question {
 	
 	private Integer lookbackId = 0;
 
+	@Column(length=1000)
 	private String hint;
 
+	private boolean start;
+	
 	@NotNull
 	private String formType;
 
@@ -121,6 +124,12 @@ public class Question {
 	public void setLookbackId(Integer lookbackId) {
 		this.lookbackId = lookbackId;
 	}
-	
-	
+
+	public boolean isStart() {
+		return start;
+	}
+
+	public void setStart(boolean start) {
+		this.start = start;
+	}
 }

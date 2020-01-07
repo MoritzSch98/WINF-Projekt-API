@@ -45,7 +45,15 @@ public class QuestionController {
 
 		return questionService.getAllQuestionsOfFormTypeWithinCategory(formType, category);
 	}
-
+	
+	//get the starting question of formtype with specific category
+	@RequestMapping(path = "/type/{formType}/category/{category}/findstart")
+	public Question getStartingQuestionOfFormTypeWithinCategory(@PathVariable String formType,
+			@PathVariable String category) {
+				
+		return questionService.getStartingQuestionOfFormTypeWithinCategory(formType, category);
+	}
+	
 	// Add a new Question
 	@RequestMapping(method = RequestMethod.POST, value = "frage/add")
 	public String saveQuestion(@RequestBody Question question) {

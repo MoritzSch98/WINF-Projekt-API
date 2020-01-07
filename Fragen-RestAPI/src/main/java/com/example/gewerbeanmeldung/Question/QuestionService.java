@@ -222,6 +222,19 @@ public class QuestionService {
 	public boolean existsQuestionByFormType(String formtype) {
 		return questionRepo.existsQuestionByFormType(formtype);
 	}
+
+	public Question getStartingQuestionOfFormTypeWithinCategory(String formType, String category) {
+		List<Question> qList = getAllQuestionsOfFormTypeWithinCategory(formType, category);
+		Question q = new Question();
+		int i = 0; 
+		while (i<qList.size()) {
+			if(qList.get(i).isStart()) {
+				q = qList.get(i);
+			}
+			i++;
+		}
+		return q;
+	}
 }
 
 
