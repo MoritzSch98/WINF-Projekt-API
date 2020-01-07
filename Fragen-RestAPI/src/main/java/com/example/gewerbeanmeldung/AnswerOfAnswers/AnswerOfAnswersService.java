@@ -28,7 +28,9 @@ public class AnswerOfAnswersService {
 		return aoaRepo.findAllByAnswerId(answersId);
 	}
 	
-	//ändern, löschen, holen 
+	public AnswerOfAnswers editAnswerOfAnswers(AnswerOfAnswers aoa) {
+		return aoaRepo.save(aoa);
+	}
 	
 	public String deleteAnswerOfAnswer(AnswerOfAnswers answerOfAnswers) {
 		aoaRepo.delete(answerOfAnswers);	
