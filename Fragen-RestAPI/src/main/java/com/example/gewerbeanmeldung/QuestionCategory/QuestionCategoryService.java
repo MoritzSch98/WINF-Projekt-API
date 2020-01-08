@@ -29,4 +29,7 @@ public class QuestionCategoryService {
 		
 		return qcs;
 	}
+	public QuestionCategory getCategoryById(Integer id) {
+		return questionCategoryRepo.findById(id).orElse(null);
+	}
 }

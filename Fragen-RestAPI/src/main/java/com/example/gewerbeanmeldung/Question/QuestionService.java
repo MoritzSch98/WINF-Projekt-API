@@ -223,8 +223,11 @@ public class QuestionService {
 		return questionRepo.existsQuestionByFormType(formtype);
 	}
 
-	public Question getStartingQuestionOfFormTypeWithinCategory(String formType, String category) {
-		List<Question> qList = getAllQuestionsOfFormTypeWithinCategory(formType, category);
+	public Question getStartingQuestionOfFormTypeWithinCategory(Integer form_id, Integer category_id) {
+		String formType = formService.getFormById(form_id).getFormname();
+		String categoryType = questionCategoryService.getCategoryById(form_id).getCategory();
+		
+		List<Question> qList = getAllQuestionsOfFormTypeWithinCategory(formType, categoryType);
 		Question q = new Question();
 		int i = 0; 
 		while (i<qList.size()) {

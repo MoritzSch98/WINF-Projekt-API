@@ -47,11 +47,11 @@ public class QuestionController {
 	}
 	
 	//get the starting question of formtype with specific category
-	@RequestMapping(path = "/type/{formType}/category/{category}/findstart")
-	public Question getStartingQuestionOfFormTypeWithinCategory(@PathVariable String formType,
-			@PathVariable String category) {
+	@RequestMapping(path = "/type/{form_id}/category/{category_id}/findstart")
+	public Question getStartingQuestionOfFormTypeWithinCategory(@PathVariable Integer form_id,
+			@PathVariable Integer category_id) {
 				
-		return questionService.getStartingQuestionOfFormTypeWithinCategory(formType, category);
+		return questionService.getStartingQuestionOfFormTypeWithinCategory(form_id, category_id);
 	}
 	
 	// Add a new Question
