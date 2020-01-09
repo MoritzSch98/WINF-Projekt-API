@@ -22,6 +22,10 @@ public class QuestionCategoryService {
 		QuestionCategory qc = questionCategoryRepo.findByCategory(category);
 		return qc.getQuestions();
 	}
+	public List<Question> getQuestionByCategoryId(Integer id) {
+		QuestionCategory qc = getCategoryById(id);
+		return qc.getQuestions();
+	}
 
 	public List<QuestionCategory> getAllCategories() {
 		List<QuestionCategory> qcs = new ArrayList<>();

@@ -17,9 +17,9 @@ public class QuestionCategoryController {
 	private QuestionCategoryService questionCategoryService;
 
 	// Gets all Questions with specific form-type
-	@RequestMapping(path = "category/{category}")
-	public List<Question> getByCategory(@PathVariable String category) {
-		return questionCategoryService.getQuestionByCategory(category);
+	@RequestMapping(path = "category/{category_id}")
+	public List<Question> getByCategory(@PathVariable Integer category_id) {
+		return questionCategoryService.getQuestionByCategoryId(category_id);
 	}
 	
 	@RequestMapping(path = "category/all")

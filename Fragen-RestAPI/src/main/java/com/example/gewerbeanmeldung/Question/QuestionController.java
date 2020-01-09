@@ -33,17 +33,17 @@ public class QuestionController {
 	}
 
 	// Gets all Questions with specific form-type
-	@RequestMapping(path = "type/{formType}")
-	public List<Question> getByFormType(@PathVariable String formType) {
-		return questionService.getByFormType(formType);
+	@RequestMapping(path = "type/{form_id}")
+	public List<Question> getByFormType(@PathVariable Integer form_id) {
+		return questionService.getByFormType(form_id);
 	}
 
 	// Get all questions within a formtype which have a specific category
-	@RequestMapping(path = "/type/{formType}/category/{category}")
-	public List<Question> getAllQuestionsOfFormTypeWithinCategory(@PathVariable String formType,
-			@PathVariable String category) {
+	@RequestMapping(path = "/type/{form_id}/category/{category_id}")
+	public List<Question> getAllQuestionsOfFormTypeWithinCategory(@PathVariable Integer form_id,
+			@PathVariable Integer category_id) {
 
-		return questionService.getAllQuestionsOfFormTypeWithinCategory(formType, category);
+		return questionService.getAllQuestionsOfFormTypeWithinCategory(form_id, category_id);
 	}
 	
 	//get the starting question of formtype with specific category

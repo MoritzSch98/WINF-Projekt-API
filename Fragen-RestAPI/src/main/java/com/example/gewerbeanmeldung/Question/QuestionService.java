@@ -36,8 +36,10 @@ public class QuestionService {
 	}
 
 	// Lists all questions of a specific FormType
-	public List<Question> getByFormType(String formType) {
+	public List<Question> getByFormType(Integer form_id) {
 		List<Question> frageList = new ArrayList<>();
+		String formType = formService.getFormById(form_id).getFormname();
+		System.out.println(formType);
 		questionRepo.findByFormType(formType).forEach(frageList::add);
 		;
 		return frageList;
@@ -165,9 +167,9 @@ public class QuestionService {
 
 	// Gets all Questions of a specific FormType and which belong to a specific
 	// category
-	public List<Question> getAllQuestionsOfFormTypeWithinCategory(String formType, String category) {
-
-		List<Question> formTypeQuestions = getByFormType(formType);
+	public List<Question> getAllQuestionsOfFormTypeWithinCategory(Integer form_id, Integer category_id) {
+		List<Question> formTypeQuestions = getByFormType(form_id);
+		String category = questionCategoryService.getCategoryById(category_id).getCategory();
 		List<Question> output = new ArrayList<>();
 		for (int i = 0; i < formTypeQuestions.size(); i++) {
 			List<QuestionCategory> qc = formTypeQuestions.get(i).getQuestionCategories();
@@ -223,11 +225,8 @@ public class QuestionService {
 		return questionRepo.existsQuestionByFormType(formtype);
 	}
 
-	public Question getStartingQuestionOfFormTypeWithinCategory(Integer form_id, Integer category_id) {
-		String formType = formService.getFormById(form_id).getFormname();
-		String categoryType = questionCategoryService.getCategoryById(form_id).getCategory();
-		
-		List<Question> qList = getAllQuestionsOfFormTypeWithinCategory(formType, categoryType);
+	public Question getStartingQuestionOfFormTypeWithinCategory(Integer form_id, Integer category_id) {	
+		List<Question> qList = getAllQuestionsOfFormTypeWithinCategory(form_id, category_id);
 		Question q = new Question();
 		int i = 0; 
 		while (i<qList.size()) {
