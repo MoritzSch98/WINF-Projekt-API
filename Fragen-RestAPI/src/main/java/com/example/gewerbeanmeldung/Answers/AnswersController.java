@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.example.gewerbeanmeldung.Question.Question;
 
 @RestController
-@RequestMapping(path = "")
+@RequestMapping(path = "/")
 public class AnswersController {
 
 	@Autowired
