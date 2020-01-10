@@ -47,7 +47,12 @@ public class QuestionService {
 
 	// Saves a Question
 	public String saveQuestion(Question question) {
-		try {			
+		try {
+			for(int i = 0; i < question.getQuestionCategories().size(); i++) {
+				if(questionCategoryService.existsByCategoryName(question.getQuestionCategories().get(i).getCategory())) {
+					question.getQuestionCategories().set(i, questionCategoryService.getByCategoryName(question.getQuestionCategories().get(i).getCategory())); 
+				}
+			}
 			//Save question
 			questionRepo.save(question);
 			//Add the formtype to form entity, if not existing

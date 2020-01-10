@@ -22,6 +22,10 @@ public class QuestionCategoryService {
 		QuestionCategory qc = questionCategoryRepo.findByCategory(category);
 		return qc.getQuestions();
 	}
+	public QuestionCategory getByCategoryName(String category) {
+		return questionCategoryRepo.findByCategory(category);	
+	}
+	
 	public List<Question> getQuestionByCategoryId(Integer id) {
 		QuestionCategory qc = getCategoryById(id);
 		return qc.getQuestions();
@@ -35,5 +39,13 @@ public class QuestionCategoryService {
 	}
 	public QuestionCategory getCategoryById(Integer id) {
 		return questionCategoryRepo.findById(id).orElse(null);
+	}
+	
+	public boolean existsByCategoryName(String category) {
+		QuestionCategory qc = questionCategoryRepo.findByCategory(category);
+		if(qc != null){
+			return true;
+		}
+		return false;
 	}
 }

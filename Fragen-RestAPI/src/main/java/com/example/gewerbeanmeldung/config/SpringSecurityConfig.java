@@ -23,7 +23,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
-		http.antMatcher("/**").authorizeRequests().antMatchers("/frage").permitAll().antMatchers("/frage/{id}").permitAll()
+		http.csrf().disable().cors().and().antMatcher("/**").authorizeRequests().antMatchers("/frage").permitAll().antMatchers("/frage/{id}").permitAll()
 		.antMatchers("/type/{formType}").permitAll().antMatchers("/category/all").permitAll()
 		.antMatchers("/type/{formType}/category/{category}").permitAll().antMatchers("/type/{form_id}/category/{category_id}/findstart").permitAll()
 		.antMatchers("/category/{category}").permitAll().antMatchers("/frage/{id}/choices").permitAll()
