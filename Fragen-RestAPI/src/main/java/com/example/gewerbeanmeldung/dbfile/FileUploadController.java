@@ -20,9 +20,9 @@ public class FileUploadController {
     @Autowired
     private DatabaseFileService fileStorageService;
 
-    @PostMapping("/uploadFile/{answerId}")
-    public Response uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Integer answerId) {
-    	DatabaseFile fileName = fileStorageService.storeFile(file, answerId);
+    @PostMapping("/uploadFile/filled/{form_id}/question/{question_id}")
+    public Response uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Integer form_id, @PathVariable Integer question_id) {
+    	DatabaseFile fileName = fileStorageService.storeFile(file, form_id, question_id);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/downloadFile/")
@@ -33,17 +33,17 @@ public class FileUploadController {
                 file.getContentType(), file.getSize());
     }
 
-    @PostMapping("/uploadMultipleFiles/{answerId}")
-    public List<Response> uploadMultipleFiles(@PathVariable Integer answerId, @RequestParam("files") MultipartFile[] files) {
+    @PostMapping("/uploadMultipleFiles/filled/{form_id}/question/{question_id}")
+    public List<Response> uploadMultipleFiles(@PathVariable Integer form_id, @PathVariable Integer question_id, @RequestParam("files") MultipartFile[] files) {
         return Arrays.asList(files)
                 .stream()
-                .map(file -> uploadFile(file, answerId))
+                .map(file -> uploadFile(file, form_id, question_id))
                 .collect(Collectors.toList());
     }
     
-    @RequestMapping(method = RequestMethod.PUT, path = "/uploadFile/{id}/{answerId}/update")
-    public String updateFile(@RequestParam("file") MultipartFile file, @PathVariable Integer answerId, @PathVariable String id) {
-    	fileStorageService.updateFile(id, file, answerId);
+    @RequestMapping(method = RequestMethod.PUT, path = "/uploadFile/{id}/filled/{form_id}/question/{question_id}/update")
+    public String updateFile(@RequestParam("file") MultipartFile file, @PathVariable Integer form_id, @PathVariable Integer question_id, @PathVariable String id) {
+    	fileStorageService.updateFile(id, file, form_id, question_id);
 		return id;
     }
     // im Service eine Lösch methode 

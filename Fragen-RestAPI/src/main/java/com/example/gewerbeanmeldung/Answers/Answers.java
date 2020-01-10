@@ -22,6 +22,9 @@ import com.example.gewerbeanmeldung.FormFilled.FormFilled;
 import com.example.gewerbeanmeldung.dbfile.DatabaseFile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+
+//This is answer entity, it is unique by the question_id and formFilled_id
+//Each answer has answer type, which is checking dateanswer and fileanswer or aoa inputs and then is set correctly
 @Entity
 @Table(name = "Answers", uniqueConstraints = {@UniqueConstraint(columnNames={"question_id", "formFilled_id"})})
 public class Answers {

@@ -38,7 +38,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		.antMatchers("/forms/{form_id}/answers/all/edit").permitAll()
 		.anyRequest()
 				.authenticated().and()
-				// .formLogin().and()
+				.formLogin().and()
 				.httpBasic();
 	}
 	

@@ -9,6 +9,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.gewerbeanmeldung.Answers.Answers;
 import com.example.gewerbeanmeldung.Answers.AnswersService;
+import com.example.gewerbeanmeldung.Question.QuestionService;
 
 
 @Service
@@ -18,8 +19,11 @@ public class DatabaseFileService {
     private DatabaseFileRepository dbFileRepository;
     @Autowired
     private AnswersService answersService;
+    @Autowired
+    private QuestionService qService;
+    
 
-    public DatabaseFile storeFile(MultipartFile file, Integer answerId) {
+    public DatabaseFile storeFile(MultipartFile file, Integer form_id, Integer question_id) {
         // Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
 
@@ -30,10 +34,16 @@ public class DatabaseFileService {
             }
 
             DatabaseFile dbFile = new DatabaseFile(fileName, file.getContentType(), file.getBytes());
-            Answers a = answersService.getAnswer(answerId);
-            dbFile.setAnswers(a);
+            Answers a = answersService.findAnswerByQuestionIdAndFilledFormId(question_id, form_id);
+            if(isFileQuestion(a, question_id)) {
+            	dbFile.setAnswers(a);
+                return dbFileRepository.save(dbFile);
+            }else {
+            	System.out.println("The question you try to add an answe to, is not allowed for file uploads");
+            	return null;
+            }
             
-            return dbFileRepository.save(dbFile);
+            
         } catch (IOException ex) {
             throw new FileStorageException("Could not store file " + fileName + ". Please try again!", ex);
         }
@@ -45,14 +55,23 @@ public class DatabaseFileService {
     }
    
     
-    public String updateFile(String fileId, MultipartFile file, Integer answerId) {
+    public String updateFile(String fileId, MultipartFile file, Integer form_id, Integer question_id) {
     	deleteFile(fileId);
-    	storeFile(file, answerId);
+    	storeFile(file, form_id, question_id);
     	return "saved";
     }
     
     public String deleteFile(String fileId) {
     	dbFileRepository.deleteById(fileId);
     	return "Delete Successfull";
+    }
+    
+    //--------------Helpers ------------------------------
+    public boolean isFileQuestion(Answers a, Integer question_id) {
+    	 a = answersService.findAnswerType(a, question_id);
+    	 if(!(a.getAnswerType().equals("fileanswer"))) {
+    		return false;
+    	 }
+    	 return true;
     }
 }

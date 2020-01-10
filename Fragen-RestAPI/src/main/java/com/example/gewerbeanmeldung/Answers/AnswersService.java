@@ -291,6 +291,12 @@ public class AnswersService {
 	}
 	
 	
+	//Method returns the answer by question id and ff id
+	public Answers findAnswerByQuestionIdAndFilledFormId(Integer question_id, Integer filledform_id) {
+		FormFilled ff = ffService.getFilledForm(filledform_id);
+		return answerRepo.findByQuestionId(question_id, ff);
+	}
+	
 	//Looks if the question flow is changed and returns the next questionid, 
 	//which needs to be displayed
 	public Integer changesQuestionFlow(Answers a, Integer question_id) {
