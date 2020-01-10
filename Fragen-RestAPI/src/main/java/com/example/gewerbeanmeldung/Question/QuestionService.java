@@ -58,7 +58,7 @@ public class QuestionService {
 			//Add the formtype to form entity, if not existing
 			formService.addWhenNotExisting(question.getFormType());
 				
-		}catch(Exception e) {
+		}catch(Exception e) { 
 			if(question.getQuestion() == null) {
 				return "Your Question needs to have a Question Name";
 			}
