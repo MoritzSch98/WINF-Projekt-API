@@ -64,11 +64,13 @@ public class AnswersService {
 		}
 		
 		List<AnswerOfAnswers> aoaList = answer.getAoa();
-		for(int i = 0; i < aoaList.size(); i++) {
-			aoaList.get(i).setAnswers(answer);
-			aoaService.addAnswerOfAnswer(aoaList.get(i));		
+		if(aoaList != null) {
+			for(int i = 0; i < aoaList.size(); i++) {
+				aoaList.get(i).setAnswers(answer);
+				aoaService.addAnswerOfAnswer(aoaList.get(i));		
+			}
 		}
-		
+			
 		try {
 			answerRepo.save(answer);
 		}catch(Exception e) {
