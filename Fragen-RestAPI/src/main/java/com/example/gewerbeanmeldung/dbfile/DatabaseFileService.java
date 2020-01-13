@@ -65,6 +65,11 @@ public class DatabaseFileService {
     	dbFileRepository.deleteById(fileId);
     	return "Delete Successfull";
     }
+    public String deleteFileByAnswerId(Answers answer) {
+    	DatabaseFile dbfile = dbFileRepository.getByAnswer(answer);
+    	dbFileRepository.deleteById(dbfile.getId());
+    	return "success in deleting";
+    }
     
     //--------------Helpers ------------------------------
     public boolean isFileQuestion(Answers a, Integer question_id) {

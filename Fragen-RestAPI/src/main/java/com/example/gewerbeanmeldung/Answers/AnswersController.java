@@ -31,8 +31,8 @@ public class AnswersController {
 	}
 	
 	@RequestMapping(method = RequestMethod.DELETE, path = "forms/{form_id}/question/{question_id}/answers")
-	public String deleteAnswerToForm(@RequestBody Answers answer, @PathVariable Integer form_id, @PathVariable Integer question_id) {
-		return answerService.deleteAnswerOfFormFilled(answer);
+	public String deleteAnswerToForm(@PathVariable Integer form_id, @PathVariable Integer question_id) {
+		return answerService.deleteAnswerOfFormFilledByFormAndQuestion(form_id, question_id);
 	}
 	
 	// Posts all Answers to a Filled Form

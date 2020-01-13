@@ -23,7 +23,7 @@ public class DatabaseFile {
 	@Lob
 	private byte[] data;
 
-	@ManyToOne(cascade = CascadeType.ALL)
+	@ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="answers_id", nullable=false)
 	@JsonIgnore
 	private Answers answers;

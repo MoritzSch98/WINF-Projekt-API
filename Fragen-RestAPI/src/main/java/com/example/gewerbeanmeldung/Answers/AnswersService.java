@@ -9,6 +9,7 @@ import com.example.gewerbeanmeldung.FormFilled.FormFilled;
 import com.example.gewerbeanmeldung.FormFilled.FormFilledService;
 import com.example.gewerbeanmeldung.Question.Question;
 import com.example.gewerbeanmeldung.Question.QuestionService;
+import com.example.gewerbeanmeldung.dbfile.DatabaseFileService;
 
 @Service
 public class AnswersService {
@@ -21,6 +22,8 @@ public class AnswersService {
 	private AnswerOfAnswersService aoaService;
 	@Autowired
 	private QuestionService qService;
+	@Autowired
+	private DatabaseFileService dbService;
 
 
 //--------------------- The Get Functions ----------------------------------	
@@ -101,6 +104,18 @@ public class AnswersService {
 	}
 	
 //--------------------- The Delete Functions ----------------------------------		
+	//Deleting an Answer of a Formfilled 
+		public String deleteAnswerOfFormFilledByFormAndQuestion(Integer form_id, Integer question_id) {
+		
+			Answers a = findAnswerByQuestionIdAndFilledFormId(question_id, form_id);
+			if(a.getAnswerType().equals("fileanswer")){
+				dbService.deleteFileByAnswerId(a);
+			}
+			deleteAnswerOfFormFilled(a);
+			
+			return "answer deleted";
+		}
+	
 	//Deleting an Answer of a Formfilled 
 	public String deleteAnswerOfFormFilled(Answers answer) {
 	
