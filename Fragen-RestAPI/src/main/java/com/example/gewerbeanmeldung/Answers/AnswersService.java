@@ -105,22 +105,36 @@ public class AnswersService {
 	
 //--------------------- The Delete Functions ----------------------------------		
 	//Deleting an Answer of a Formfilled 
-		public String deleteAnswerOfFormFilledByFormAndQuestion(Integer form_id, Integer question_id) {
+	public String deleteAnswerOfFormFilledByFormAndQuestion(Integer form_id, Integer question_id) {
 		
-			Answers a = findAnswerByQuestionIdAndFilledFormId(question_id, form_id);
-			if(a.getAnswerType().equals("fileanswer")){
-				dbService.deleteFileByAnswerId(a);
-			}
-			deleteAnswerOfFormFilled(a);
-			
-			return "answer deleted";
+		Answers a = findAnswerByQuestionIdAndFilledFormId(question_id, form_id);
+		if(a.getAnswerType().equals("fileanswer")){
+			dbService.deleteFileByAnswerId(a);
 		}
+		deleteAnswerOfFormFilled(a);	
+		return "answer deleted";
+	}
+	
+	//Delete all Answers of a QuestionId
+	public String deleteAllAnswersOfQuestionId(Integer question_id) {
+		List<Answers> aList = answerRepo.findAllByQuestionId(question_id);
+		for(int i = 0; i < aList.size(); i++) {
+			if(aList.get(i).getAnswerType().equals("fileanswer")){
+				dbService.deleteFileByAnswerId(aList.get(i));
+			}
+			deleteAnswerOfFormFilled(aList.get(i));
+		}
+		return "You deleted all Answers which have been belonging to the questionId: " + question_id;
+	}
 	
 	//Deleting an Answer of a Formfilled 
 	public String deleteAnswerOfFormFilled(Answers answer) {
 	
 		for(int i = 0; i < answer.getAoa().size(); i++) {
 			aoaService.deleteAnswerOfAnswer(answer.getAoa().get(i));
+		}
+		if(answer.getAnswerType().equals("fileanswer")){
+			dbService.deleteFileByAnswerId(answer);
 		}
 		answerRepo.delete(answer);
 		

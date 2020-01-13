@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.gewerbeanmeldung.Answers.AnswersService;
 import com.example.gewerbeanmeldung.Choices.Choices;
 import com.example.gewerbeanmeldung.Choices.ChoicesService;
 import com.example.gewerbeanmeldung.QuestionCategory.QuestionCategory;
@@ -27,6 +28,8 @@ public class QuestionService {
 	
 	@Autowired
 	private FormService formService;
+	@Autowired
+	private AnswersService aService;
 
 	// Lists all questions
 	public List<Question> getAllQuestions() {
@@ -162,6 +165,8 @@ public class QuestionService {
 	// Deletes a question by it's ID
 	public String deleteQuestionById(Integer id) {
 		try{
+			//Delete also the answers which belong to this QuestionId
+			aService.deleteAllAnswersOfQuestionId(id);
 			questionRepo.deleteById(id);
 			return "Success in deleting this Question";
 		}catch(Exception e) {

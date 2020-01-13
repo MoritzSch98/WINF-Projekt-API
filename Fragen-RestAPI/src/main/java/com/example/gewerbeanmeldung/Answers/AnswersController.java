@@ -37,7 +37,7 @@ public class AnswersController {
 	
 	// Posts all Answers to a Filled Form
 	@RequestMapping(method = RequestMethod.DELETE, path = "forms/{form_id}/answers/all/delete")
-	public String addAllAnswersToForm(@PathVariable Integer form_id) {
+	public String deleteAllAnswersToForm(@PathVariable Integer form_id) {
 		return answerService.deleteAllAnswersOfFormFilled(form_id);
 	}
 	
@@ -49,7 +49,7 @@ public class AnswersController {
 	
 	//Editing multiple Answers of a FilledForm
 	@RequestMapping(method = RequestMethod.PUT, path = "forms/{form_id}/answers/all/edit")
-	public String editAnswerToForm(@RequestBody List<Answers> answers, @PathVariable Integer form_id) {
+	public String editAllAnswerToForm(@RequestBody List<Answers> answers, @PathVariable Integer form_id) {
 		return answerService.editAllAnswers(answers, form_id);
 	}
 }
