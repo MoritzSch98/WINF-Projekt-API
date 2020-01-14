@@ -19,7 +19,7 @@ public class QuestionController {
 	QuestionService questionService;
 
 	// Lists all Questions
-	@RequestMapping(path = "/frage")
+	@RequestMapping(path = "/fragen")
 	public List<Question> getAllQuestions() {
 		return questionService.getAllQuestions();
 	}
@@ -27,7 +27,7 @@ public class QuestionController {
 	
 	
 	// Get a specific Question by ID
-	@RequestMapping(path = "frage/{id}")
+	@RequestMapping(path = "fragen/{id}")
 	public Question getQuestionById(@PathVariable Integer id) {
 		return questionService.getQuestionById(id);
 	}
