@@ -234,19 +234,6 @@ public class QuestionService {
 	public boolean existsQuestionByFormType(String formtype) {
 		return questionRepo.existsQuestionByFormType(formtype);
 	}
-
-	public Question getStartingQuestionOfFormTypeWithinCategory(Integer form_id, Integer category_id) {	
-		List<Question> qList = getAllQuestionsOfFormTypeWithinCategory(form_id, category_id);
-		Question q = new Question();
-		int i = 0; 
-		while (i<qList.size()) {
-			if(qList.get(i).isStart()) {
-				q = qList.get(i);
-			}
-			i++;
-		}
-		return q;
-	}
 }
 
 

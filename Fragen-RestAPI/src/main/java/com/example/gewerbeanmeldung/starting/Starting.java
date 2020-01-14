@@ -28,7 +28,7 @@ public class Starting {
 	private String startText;
 	
 	public Starting() {
-		
+		this.id = new StartingId();
 	}
 	
 	public Starting(Integer formId, Integer QuestionCategoryId) {

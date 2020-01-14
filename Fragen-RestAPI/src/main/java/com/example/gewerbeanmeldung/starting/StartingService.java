@@ -22,12 +22,27 @@ public class StartingService {
 	public String addStarting(Starting starting, Integer form_id, Integer category_id) {
 		starting.setFormId(form_id);
 		starting.setQuestionCategoryId(category_id);
+		String formname;
+		String q;
+		String categoryname;
+		try {
+			formname = fService.getFormById(form_id).getFormname();
+			q = qService.getQuestionById(starting.getQuestionId()).getQuestion();
+			categoryname = qcService.getCategoryById(category_id).getCategory();
+		}catch(Exception e) {
+			return ""+e;
+		}
 		sRepo.save(starting);
-		String formname = fService.getFormById(form_id).getFormname();
-		String q = qService.getQuestionById(starting.getQuestionId()).getQuestion();
-		String categoryname = qcService.getCategoryById(category_id).getCategory();
-		return "You saved the starting question for this "+ formname +" and category "+
-				categoryname +". The starting question is: " + q;
+		return "You saved the starting question for \n"
+				+ "this Form: "+ formname +", \n"
+				+ "this Category: "+ categoryname +". \n"
+				+ "The starting question is: " + q + " \n"
+				+ "If you have had a previous starting question for this combination, "
+				+ "the previous one was updated automatically";
+	}
+
+	public Starting getStarting(Integer form_id, Integer category_id) {
+		return sRepo.findByFormAndCategory(form_id, category_id);
 	}
 	
 	
