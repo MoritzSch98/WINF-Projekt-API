@@ -1,5 +1,6 @@
 package com.example.gewerbeanmeldung.starting;
 
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+@CrossOrigin(origins="https://veranstaltungsformular.firebaseapp.com")
 @RestController
 @RequestMapping(path = "")
 public class StartingController {
@@ -27,4 +28,10 @@ public class StartingController {
 	public Starting getStarting(@PathVariable Integer form_id, @PathVariable Integer category_id) {
 		return sService.getStarting(form_id, category_id);
 	}
+
+	@RequestMapping(method = RequestMethod.GET, path = "/findAllStarts")
+	public List<Starting> getAllStartings(){
+		return sService.getAllStartings();
+	}
+	
 }

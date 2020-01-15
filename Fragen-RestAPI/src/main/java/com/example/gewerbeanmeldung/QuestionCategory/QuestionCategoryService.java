@@ -40,6 +40,10 @@ public class QuestionCategoryService {
 	public QuestionCategory getCategoryById(Integer id) {
 		return questionCategoryRepo.findById(id).orElse(null);
 	}
+	public String deleteQuestionCategoryById(Integer id){
+		questionCategoryRepo.deleteById(id);
+		return "deleted category";
+	}
 	
 	public boolean existsByCategoryName(String category) {
 		QuestionCategory qc = questionCategoryRepo.findByCategory(category);
@@ -47,5 +51,17 @@ public class QuestionCategoryService {
 			return true;
 		}
 		return false;
+	}
+	public List<QuestionCategory> deleteWhenNoMoreExisting(List<QuestionCategory> qcList) {
+		List<QuestionCategory> deleteQcs = new ArrayList<QuestionCategory>();
+		for(int i = 0; i < qcList.size(); i++) {
+		Integer id = qcList.get(i).getId();
+		QuestionCategory qc = getCategoryById(id);
+		if(qc.getQuestions().size() == 1) {
+			questionCategoryRepo.deleteById(id);
+			deleteQcs.add(qc);
+			}
+		}
+		return deleteQcs;
 	}
 }

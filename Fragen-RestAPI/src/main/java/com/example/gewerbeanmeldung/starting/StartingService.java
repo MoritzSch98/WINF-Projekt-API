@@ -3,6 +3,10 @@ package com.example.gewerbeanmeldung.starting;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
+import java.util.ArrayList;
+
 import com.example.gewerbeanmeldung.Question.QuestionService;
 import com.example.gewerbeanmeldung.QuestionCategory.QuestionCategoryService;
 import com.example.gewerbeanmeldung.form.FormService;
@@ -43,6 +47,15 @@ public class StartingService {
 
 	public Starting getStarting(Integer form_id, Integer category_id) {
 		return sRepo.findByFormAndCategory(form_id, category_id);
+	}
+
+
+
+	
+	public List<Starting> getAllStartings() {
+		List<Starting> startingList = new ArrayList<>();
+		sRepo.findAll().forEach(startingList::add);
+		return startingList;
 	}
 	
 	

@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@CrossOrigin(origins = "http://localhost:4200", maxAge = 3600)
+@CrossOrigin(origins="https://veranstaltungsformular.firebaseapp.com")
 @RestController
 @RequestMapping(path = "")
 public class QuestionController {
@@ -27,13 +27,13 @@ public class QuestionController {
 	
 	
 	// Get a specific Question by ID
-	@RequestMapping(path = "fragen/{id}")
+	@RequestMapping(path = "/fragen/{id}")
 	public Question getQuestionById(@PathVariable Integer id) {
 		return questionService.getQuestionById(id);
 	}
 
 	// Gets all Questions with specific form-type
-	@RequestMapping(path = "type/{form_id}")
+	@RequestMapping(path = "/type/{form_id}")
 	public List<Question> getByFormType(@PathVariable Integer form_id) {
 		return questionService.getByFormType(form_id);
 	}
@@ -47,27 +47,28 @@ public class QuestionController {
 	}
 	
 	// Add a new Question
-	@RequestMapping(method = RequestMethod.POST, value = "frage/add")
+	@RequestMapping(method = RequestMethod.POST, value = "/frage/add")
 	public String saveQuestion(@RequestBody Question question) {
 		return questionService.saveQuestion(question);
 	}
 
 	// Adds the following question to an existing question
-	@RequestMapping(method = RequestMethod.PUT, value = "frage/{id}/addfollowing")
+	@RequestMapping(method = RequestMethod.PUT, value = "/frage/{id}/addfollowing")
 	public String addFollowingQuestion(@PathVariable Integer id, @RequestBody Question question) {
 		return questionService.addFollowingQuestion(id, question);
 	}
 
 	// Edit a specific Question
-	@RequestMapping(method = RequestMethod.PUT, value = "frage/{id}/edit")
+	@RequestMapping(method = RequestMethod.PUT, value = "/frage/{id}/edit")
 	public Question editQuestion(@PathVariable Integer id, @RequestBody Question question) {
 		return questionService.editQuestion(question, id);
 	}
 
 	// Deletes a specific Question
-	@RequestMapping(method = RequestMethod.DELETE, value = "frage/{id}/delete")
-	public String deleteQuestionById(@PathVariable Integer id) {	
-		return questionService.deleteQuestionById(id);
+	@RequestMapping(method = RequestMethod.DELETE, value = "/frage/{id}/delete")
+	public String deleteQuestionById(@PathVariable Integer id) {
+	
+		 return questionService.deleteQuestionById(id);
 	}
 
 }

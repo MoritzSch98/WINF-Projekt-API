@@ -167,7 +167,18 @@ public class QuestionService {
 		try{
 			//Delete also the answers which belong to this QuestionId
 			aService.deleteAllAnswersOfQuestionId(id);
+			//Gets list of all empty categories after this question is going to be removed
+			//We have to get List first, cause of cascading we can't directly delete category or question
+			//with category directly
+			List<QuestionCategory> qcList = getQuestionById(id).getQuestionCategories();
+			qcList = questionCategoryService.deleteWhenNoMoreExisting(qcList);	
+			
+			//Deleting the question now, this is also deleting the row in relation table between question 
+			//and category
 			questionRepo.deleteById(id);
+			
+			//Deleting all categories, which we found as empty
+			questionCategoryService.deleteAllCategories(qcList);
 			return "Success in deleting this Question";
 		}catch(Exception e) {
 			return "Failed to delete this Question. Reason: "+e;
