@@ -17,25 +17,26 @@ public class AnswerOfAnswersService {
 	private AnswerOfAnswersRepository aoaRepo;
 
 	//save
-	public AnswerOfAnswers addAnswerOfAnswer(AnswerOfAnswers aoa) {
+	public AnswerOfAnswers addAnswerOfAnswers(AnswerOfAnswers aoa) {
 		return aoaRepo.save(aoa);
 	}
 	//get by id
-	public AnswerOfAnswers getAnswerOfAnswerById(Integer id) {
+	public AnswerOfAnswers getAnswerOfAnswersById(Integer id) {
 		return aoaRepo.findById(id).orElse(null);
 	}
 	//list all through answer-id
 	public List<AnswerOfAnswers> getAllAnswerOfAnswersByAnswerId(Integer answersId){
 		return aoaRepo.findAllByAnswerId(answersId);
 	}
+	 
 	//edit 
 	public AnswerOfAnswers editAnswerOfAnswers(AnswerOfAnswers aoa) {
 		return aoaRepo.save(aoa);
 	}
 	
 	//delete
-	public String deleteAnswerOfAnswer(AnswerOfAnswers answerOfAnswers) {
-		aoaRepo.delete(answerOfAnswers);	
+	public String deleteAnswerOfAnswers(AnswerOfAnswers aoa) {
+		aoaRepo.delete(aoa);	
 		return "deleted";
 	}
 }

@@ -34,21 +34,37 @@ public class Answers {
 	@Column(name = "id")
 	private Integer id;
 
+	//Half FK to the question_id of belonging question to the answer, to minimize data transfer,
+	//its not having the full question entity included
 	@Column(columnDefinition = "Integer not null")
 	private Integer question_id;
 	
+	//The answer type is going to be auto generated and depends on the question_type of the question,
+	//this answer is belonging to. The answer_type is helping us, in which table we have to look in the
+	//db. It can differ between: fileanswer, dateanswer, normal
 	@NotNull
 	private String answerType;
 	
+	//Dateanswer, only filled, if we have a question, where we want to get the actual date as an answer. 
+	//Else prop is null
 	@Basic
 	private java.sql.Date dateanswer;
 	
+	//FK to the DatabaseFile entity. If we had an fileanswer, this entity will be set. Important to know,
+	//you have to create Answers instance first without this property being filled. The server is setting
+	//the answer_type to fileanswer. Now you upload the file with the fileupload request and its
+	//going to be mapped to the answers instance now. Then we can ask for it also through the answers
+	//instance getters and setters
 	@OneToMany(mappedBy="answers")
 	private List<DatabaseFile> fileanswer;
 	
+	//FK to AnswerofAnswers. If the answer is just normal answer, we are going to have one or more elements in this
+	//List. We need it to make multi select on answers especially checkboxes work. 
 	@OneToMany(mappedBy="answers")
 	private List<AnswerOfAnswers> aoa;
 	
+	//FK to the FormFilled entity. Every answers instance belonging to a specific formFilled entity. Form
+	//Filled is an instance of every started filling of a form by a user. 
 	@ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="formFilled_id", nullable=false)
 	@JsonIgnore

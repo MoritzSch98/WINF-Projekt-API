@@ -70,7 +70,7 @@ public class AnswersService {
 		if(aoaList != null) {
 			for(int i = 0; i < aoaList.size(); i++) {
 				aoaList.get(i).setAnswers(answer);
-				aoaService.addAnswerOfAnswer(aoaList.get(i));		
+				aoaService.addAnswerOfAnswers(aoaList.get(i));		
 			}
 		}
 			
@@ -131,7 +131,7 @@ public class AnswersService {
 	public String deleteAnswerOfFormFilled(Answers answer) {
 	
 		for(int i = 0; i < answer.getAoa().size(); i++) {
-			aoaService.deleteAnswerOfAnswer(answer.getAoa().get(i));
+			aoaService.deleteAnswerOfAnswers(answer.getAoa().get(i));
 		}
 		if(answer.getAnswerType().equals("fileanswer")){
 			dbService.deleteFileByAnswerId(answer);
@@ -248,11 +248,11 @@ public class AnswersService {
 		}
 		if (aoa_new.size() != 0) {
 			for(int x = 0; x < aoa_new.size(); x++) {
-				aoaService.addAnswerOfAnswer(aoa_new.get(x));
+				aoaService.addAnswerOfAnswers(aoa_new.get(x));
 			}
 		}else if(aoa_old.size() != 0){
 			for(int x = 0; x < aoa_old.size(); x++) {
-				aoaService.deleteAnswerOfAnswer(aoa_old.get(x));
+				aoaService.deleteAnswerOfAnswers(aoa_old.get(x));
 			}
 		}
 		return aoaService.getAllAnswerOfAnswersByAnswerId(answer_id);

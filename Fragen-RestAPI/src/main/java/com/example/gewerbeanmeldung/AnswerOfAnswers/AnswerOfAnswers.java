@@ -13,9 +13,9 @@ import javax.persistence.Table;
 import com.example.gewerbeanmeldung.Answers.Answers;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-
-//This entity is representing the individual answers for single text answer options and also multiselect 
-//answers of text
+//This entity is representing the individual answers for single text answer options and 
+//also multiselect answers of text. It is needed to especially display the answer of a checkbox
+//where you are allowed to select more than one answer
 @Entity
 @Table(name = "AnswerOfAnswers")
 public class AnswerOfAnswers {

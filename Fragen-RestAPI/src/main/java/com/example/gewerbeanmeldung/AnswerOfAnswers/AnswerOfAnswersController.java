@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.gewerbeanmeldung.Question.Question;
 
+
+//Empty Controller Class. We never add a specific request only to the AnswerOfAnswers, as its always
+//dependend to each answer, so the answer is representing the requests for answerOfAnswers as well
 @RestController
 @RequestMapping(path = "")
 public class AnswerOfAnswersController {
