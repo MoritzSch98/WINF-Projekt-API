@@ -15,7 +15,9 @@ import javax.validation.constraints.NotNull;
 
 import com.example.gewerbeanmeldung.Answers.Answers;
 import com.example.gewerbeanmeldung.Question.*;
+import com.example.gewerbeanmeldung.dbfile.DatabaseFile;
 import com.example.gewerbeanmeldung.form.Form;
+import com.example.gewerbeanmeldung.pdffile.PdfFile;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
@@ -33,6 +35,8 @@ public class FormFilled {
 	
 	private String fillingPerson;
 
+	@OneToMany(mappedBy="formFilled")
+	private List<PdfFile> pdf;
 	
 	@OneToMany(mappedBy="formFilled",cascade = CascadeType.ALL)
     private List<Answers> allAnswers;
@@ -77,6 +81,16 @@ public class FormFilled {
 
 	public void setFillingPerson(String fillingPerson) {
 		this.fillingPerson = fillingPerson;
+	}
+
+
+	public List<PdfFile> getPdf() {
+		return pdf;
+	}
+
+
+	public void setPdf(List<PdfFile> pdf) {
+		this.pdf = pdf;
 	}
 	
 }

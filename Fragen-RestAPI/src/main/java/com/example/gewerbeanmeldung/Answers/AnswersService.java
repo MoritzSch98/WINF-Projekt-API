@@ -269,6 +269,7 @@ public class AnswersService {
 		String answerType = "normal";
 		
 		//Gets the Type of the Question to look which answer type we have to set
+		qService.getQuestionById(question_id).getId();
 		String type = qService.getQuestionById(question_id).getQuestionType().getType();
 		
 		//Searches which answertype is right and sets it

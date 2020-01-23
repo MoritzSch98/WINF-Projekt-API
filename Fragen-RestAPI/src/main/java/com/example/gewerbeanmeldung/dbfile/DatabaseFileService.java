@@ -26,7 +26,7 @@ public class DatabaseFileService {
     public DatabaseFile storeFile(MultipartFile file, Integer form_id, Integer question_id) {
         // Normalize file name
         String fileName = StringUtils.cleanPath(file.getOriginalFilename());
-
+        System.out.println(fileName);
         try {
             // Check if the file's name contains invalid characters
             if(fileName.contains("..")) {

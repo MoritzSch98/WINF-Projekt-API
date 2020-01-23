@@ -1,10 +1,13 @@
 package com.example.gewerbeanmeldung.generator;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import com.example.gewerbeanmeldung.Answers.Answers;
 import com.example.gewerbeanmeldung.Question.Question;
+import com.itextpdf.io.source.ByteArrayOutputStream;
 import com.itextpdf.kernel.color.Color;
 import com.itextpdf.kernel.geom.PageSize;
 import com.itextpdf.kernel.pdf.PdfDocument;
@@ -20,30 +23,32 @@ public class PDFGen {
 	
 	public final String Überschrift = "Ausgefüllter Antrag zur Bearbeitung";
 	 // Gesprächsbedarf 
-	 public static String amt = "Ämter";
 	 public String leftTable;
 	 public String rightTable;
 	// /n Absatz
 	public Paragraph _n = new Paragraph("");
 	
-	public void createPdf(String dest2, List<Answers> aList, List<Question> qList) throws IOException{
+	public byte[] createPdf(String dest2, List<Answers> aList, List<Question> qList, String formname) throws IOException{
 		 //Initialize PDF writer
         PdfWriter writer = new PdfWriter(dest2);
  
         //Initialize PDF document
         PdfDocument pdf = new PdfDocument(writer);
-        formThePDF(pdf, aList, qList);
-		
+        return formThePDF(pdf, aList, qList, formname);
 	}
 	
-	public void formThePDF(PdfDocument pdf, List<Answers> aList, List<Question> qList) {
+	public byte[] formThePDF(PdfDocument pdf, List<Answers> aList, List<Question> qList, String formname) {
 		
 		// Initialize document
         Document document = new Document(pdf, PageSize.A4);
         document.setFontSize(12);
         
-        erzeugeÜberschrift(document);
-        
+        erzeugeÜberschrift(document, formname);
+     
+        // set date and time 
+        Paragraph datum = new Paragraph("Eingegangen am" + " " +  currentdatum() + "," + " " + currenttime()); 
+        datum.setTextAlignment(TextAlignment.RIGHT);
+        document.add(datum);
        // Setzte drei Absätze
        document.add(_n);
        document.add(_n);
@@ -51,8 +56,11 @@ public class PDFGen {
         
         erzeugeTabelle(document, aList, qList);
         
+        byte[] data = document.getPdfDocument().getWriter().getOutputStream().toString().getBytes();
         //Close document
         document.close();
+        return data;
+        
 	}
 	
 	/*
@@ -66,8 +74,6 @@ public class PDFGen {
 		Table table = new Table(2);
 		table.setTextAlignment(TextAlignment.LEFT).setBackgroundColor(Color.LIGHT_GRAY);
 		table = generateTableWithForm(table, aList, qList);
-		table.addCell("Antragssteller:");
-		table.addCell("Max Musterman");
 		return document.add(table);
 	}
 
@@ -78,7 +84,7 @@ public class PDFGen {
 	 * @param document das Dokument(PDF)
 	 * 
 	 */
-	private void erzeugeÜberschrift(Document document) {
+	private void erzeugeÜberschrift(Document document, String formname) {
 		// TODO Auto-generated method stub
 		 Paragraph p1 = new Paragraph(Überschrift); 
 	        p1.setTextAlignment(TextAlignment.CENTER);
@@ -86,7 +92,7 @@ public class PDFGen {
 	        p1.setBold();
 	        document.add(p1);
 	        
-	     Paragraph p2 = new Paragraph(amt);
+	     Paragraph p2 = new Paragraph(formname);
 	     	p2.setTextAlignment(TextAlignment.CENTER);
 	     	p2.setItalic();
 	     	document.add(p2);
@@ -122,5 +128,37 @@ public class PDFGen {
 		}
 		return table; 
 	}
+	/*
+	 * ruf das aktuelle Datum auf
+	 * 
+	 * @currentdatum das Datum, welches ausgegeben werden soll
+	 * 
+	 * return gibt das aktuelle Datum
+	 */
+	 public String currentdatum() {
+			 	
+		  java.util.Date date = java.util.Calendar.getInstance().getTime();
+	        SimpleDateFormat dateFormatter = new SimpleDateFormat("dd.MM.yyyy");
+	         String datee = dateFormatter.format(date);
+	         return datee;
+	        
+	 }
+	 	 
+	 
+	 /*
+	  * gibt die aktuelle Uhrzeit zurück
+	  * 
+	  * @currenttime uhrzeit, welches ausgegeben werden soll
+	  * 
+	  * return die Uhrzeit
+	  * 
+	  */
+	 public String currenttime() {
+		 
+		 java.util.Date datee = java.util.Calendar.getInstance().getTime();
+		 SimpleDateFormat time = new SimpleDateFormat("HH:mm");
+		 String timee = time.format(datee);
+	         return timee;
+	 }
 
 }
