@@ -1,5 +1,6 @@
 package com.example.gewerbeanmeldung.Answers;
 
+import java.io.IOException;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,6 +11,7 @@ import com.example.gewerbeanmeldung.FormFilled.FormFilledService;
 import com.example.gewerbeanmeldung.Question.Question;
 import com.example.gewerbeanmeldung.Question.QuestionService;
 import com.example.gewerbeanmeldung.dbfile.DatabaseFileService;
+import com.example.gewerbeanmeldung.generator.PDFService;
 
 @Service
 public class AnswersService {
@@ -24,6 +26,8 @@ public class AnswersService {
 	private QuestionService qService;
 	@Autowired
 	private DatabaseFileService dbService;
+	@Autowired
+	private PDFService pdfService;
 
 
 //--------------------- The Get Functions ----------------------------------	
@@ -99,8 +103,12 @@ public class AnswersService {
 			}
 			i++;
 		}
-		
-		return "successfully saved all inputs";
+		try {
+			pdfService.generatePDF(form_id);
+		} catch (IOException e) {
+			return "We saved your inputs, but there was a problem with sending the pdf of it to your mail";
+		}
+		return "successfully saved all inputs and we generated a pdf. It's being send to the email: gethackingyourlife@gmail.com";
 	}
 	
 //--------------------- The Delete Functions ----------------------------------		

@@ -47,7 +47,7 @@
 				<exclusion>
 					<groupId>org.junit.vintage</groupId>
 					<artifactId>junit-vintage-engine</artifactId>
-				</exclusion>
+				</exclusion>	
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -65,11 +65,7 @@
   		<artifactId>layout</artifactId>
   		<version>7.0.0</version>
   	</dependency>
-  	<dependency>
-  		<groupId>org.slf4j</groupId>
-  		<artifactId>slf4j-log4j12</artifactId>
-  		<version>1.7.18</version>
-  	</dependency>
+  
 
 	<dependency>
 		<groupId>javax.persistence</groupId>
