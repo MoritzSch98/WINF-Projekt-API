@@ -1,5 +1,6 @@
 package com.example.gewerbeanmeldung.starting;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -11,6 +12,7 @@ import com.example.gewerbeanmeldung.Question.QuestionService;
 import com.example.gewerbeanmeldung.QuestionCategory.QuestionCategoryService;
 import com.example.gewerbeanmeldung.form.FormService;
 
+//Server-logic for starting class
 @Service
 public class StartingService {
 
@@ -23,6 +25,7 @@ public class StartingService {
 	@Autowired 
 	private QuestionService qService;
 
+	//Add a starting. We need to have category in it, too. 
 	public String addStarting(Starting starting, Integer form_id, Integer category_id) {
 		starting.setFormId(form_id);
 		starting.setQuestionCategoryId(category_id);
@@ -45,13 +48,14 @@ public class StartingService {
 				+ "the previous one was updated automatically";
 	}
 
+	//get a starting entity from database by category
 	public Starting getStarting(Integer form_id, Integer category_id) {
 		return sRepo.findByFormAndCategory(form_id, category_id);
 	}
 
 
 
-	
+	//Gets all starting entities
 	public List<Starting> getAllStartings() {
 		List<Starting> startingList = new ArrayList<>();
 		sRepo.findAll().forEach(startingList::add);

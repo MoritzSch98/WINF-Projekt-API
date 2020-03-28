@@ -13,11 +13,13 @@ import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-
+//Putting our configs all together and make it finally working, that we really can fill in our authentication
+//login and be authenticated
 @Configuration
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer{
 
+//adding core mapping
 @Override
 public void addCorsMappings(CorsRegistry corsRegistry){
 	corsRegistry.addMapping("/**")
@@ -28,24 +30,4 @@ public void addCorsMappings(CorsRegistry corsRegistry){
 	.exposedHeaders("Authorization")
 	.allowCredentials(true);
 }
-/**	
-@Bean
-public CorsFilter corsFilter() {
-
-    UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-    CorsConfiguration config = new CorsConfiguration();
-    config.setAllowCredentials(true); 
-    config.addAllowedOrigin("*");
-    config.addAllowedHeader("*");
-    config.addAllowedMethod("OPTIONS");
-    config.addAllowedMethod("HEAD");
-    config.addAllowedMethod("GET");
-    config.addAllowedMethod("PUT");
-    config.addAllowedMethod("POST");
-    config.addAllowedMethod("DELETE");
-    config.addAllowedMethod("PATCH");
-    source.registerCorsConfiguration("/**", config);
-    return new CorsFilter(source);
-}
-**/
 }

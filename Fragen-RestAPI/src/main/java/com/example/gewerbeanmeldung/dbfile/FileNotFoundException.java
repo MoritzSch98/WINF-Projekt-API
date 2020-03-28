@@ -3,6 +3,7 @@ package com.example.gewerbeanmeldung.dbfile;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
+//Class for file not found exception. 
 @ResponseStatus(HttpStatus.NOT_FOUND)
 public class FileNotFoundException extends RuntimeException {
 

@@ -1,5 +1,6 @@
 package com.example.gewerbeanmeldung.dbfile;
 
+//Class if the storage was not successful, returning an expection message. 
 public class FileStorageException extends RuntimeException {
 	
 	private static final long serialVersionUID = 1L;

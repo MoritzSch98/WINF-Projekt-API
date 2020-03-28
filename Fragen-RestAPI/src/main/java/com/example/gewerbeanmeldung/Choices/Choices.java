@@ -12,6 +12,10 @@ import javax.validation.constraints.NotNull;
 import com.example.gewerbeanmeldung.QuestionType.QuestionType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+//This class is the Choices entity. It is representing the different 
+//options someone has on multi select checkboxes. An important feature is the nextQuestionId,
+//with the nextQuestionId, we allow, that we change the flow of questions displayed, if 
+//this specific option is ticked. 
 @Entity
 public class Choices {
 
@@ -19,11 +23,15 @@ public class Choices {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
+	//The display name of the choice
 	@NotNull
 	private String choice;
 
+	//The nextQuestionid, to be able to control the question flow.
 	private Integer nextQuestionId = 0;
 
+	//One choice can be there for multiple different types of question entities. Also means, we can have the same
+	//choice for more than one question. 
 	@ManyToMany(mappedBy = "choices")
 	@JsonIgnore
 	private List<QuestionType> questionType = new ArrayList<>();

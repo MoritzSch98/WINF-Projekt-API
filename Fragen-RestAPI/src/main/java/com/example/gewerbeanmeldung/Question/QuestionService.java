@@ -13,7 +13,7 @@ import com.example.gewerbeanmeldung.QuestionCategory.QuestionCategory;
 import com.example.gewerbeanmeldung.QuestionCategory.QuestionCategoryService;
 import com.example.gewerbeanmeldung.form.Form;
 import com.example.gewerbeanmeldung.form.FormService;
-
+//The service class for the logic in question entity.
 @Service
 public class QuestionService {
 

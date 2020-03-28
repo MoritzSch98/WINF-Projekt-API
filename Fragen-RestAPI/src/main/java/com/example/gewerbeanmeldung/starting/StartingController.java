@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-
+//Controller for starting class with all needed requests
 @CrossOrigin(origins="https://veranstaltungsformular.firebaseapp.com")
 @RestController
 @RequestMapping(path = "")
@@ -24,11 +24,13 @@ public class StartingController {
 	public String addStarting(@RequestBody Starting starting, @PathVariable Integer form_id, @PathVariable Integer category_id) {
 		return sService.addStarting(starting, form_id, category_id);
 	}
+	//get the starting entity to be able to start a new form 
 	@RequestMapping(method = RequestMethod.GET, path = "/form/{form_id}/category/{category_id}/findstart")
 	public Starting getStarting(@PathVariable Integer form_id, @PathVariable Integer category_id) {
 		return sService.getStarting(form_id, category_id);
 	}
 
+	//find all possible starts
 	@RequestMapping(method = RequestMethod.GET, path = "/findAllStarts")
 	public List<Starting> getAllStartings(){
 		return sService.getAllStartings();

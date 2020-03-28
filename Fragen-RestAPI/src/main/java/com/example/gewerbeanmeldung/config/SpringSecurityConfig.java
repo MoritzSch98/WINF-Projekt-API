@@ -1,5 +1,7 @@
 package com.example.gewerbeanmeldung.config;
 
+//This class is the actual secruity class, where we permit all requests which will not need a controlled access
+//which just should be for admins. 
 import java.util.Arrays;
 
 import org.springframework.context.annotation.Bean;
@@ -30,54 +32,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 		source.registerCorsConfiguration("/**", configuration);
 		return source;
 	}
-	
-	
-/** 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeRequests().antMatchers(HttpMethod.OPTIONS, "/**").permitAll().anyRequest()
-				.authenticated().and()
-				// .formLogin().and()
-				.httpBasic();
-	}
-
-		http.csrf().disable().cors().and().antMatcher("/**").authorizeRequests().antMatchers("/frage").permitAll().antMatchers("/frage/{id}").permitAll()
-		.antMatchers("/type/{formType}").permitAll().antMatchers("/category/all").permitAll()
-		.antMatchers("/type/{formType}/category/{category}").permitAll().antMatchers("/type/{form_id}/category/{category_id}/findstart").permitAll()
-		.antMatchers("/category/{category}").permitAll().antMatchers("/frage/{id}/choices").permitAll()
-		.antMatchers("/filled/forms/all").permitAll().antMatchers("/filled/forms/{form_id}").permitAll()
-		.antMatchers("/filled/forms/add").permitAll().antMatchers("/filled/forms/{form_id}/update").permitAll()
-		.antMatchers("/filled/forms/{form_id}/delete").permitAll().antMatchers("/filled/forms/{form_id}").permitAll()
-		.antMatchers("/forms/all").permitAll().antMatchers("/downloadFile/{fileId:.+}").permitAll()
-		.antMatchers("/uploadFile/{answerId}").permitAll().antMatchers("/uploadMultipleFiles/{answerId}").permitAll()
-		.antMatchers("/uploadFile/{id}/{answerId}/update").permitAll().antMatchers("forms/{form_id}/question/{question_id}/answers/add").permitAll()
-		.antMatchers("/forms/{form_id}/question/{question_id}/answers/{answers_id}/edit").permitAll().antMatchers("/forms/{form_id}/question/{question_id}/answers").permitAll()
-		.antMatchers("/forms/{form_id}/answers/all/delete").permitAll().antMatchers("/forms/{form_id}/answers/all/add").permitAll()
-		.antMatchers("/forms/{form_id}/answers/all/edit").permitAll()
-		.anyRequest()
-				.authenticated().and()
-				//.formLogin().and()
-				.httpBasic();
-
-
-				http.csrf().disable().cors().and().antMatcher("/**").authorizeRequests().antMatchers("/frage").permitAll().antMatchers("/frage/{id}").permitAll()
-		.antMatchers("/type/{formType}").permitAll().antMatchers("/category/all").permitAll()
-		.antMatchers("/type/{formType}/category/{category}").permitAll().antMatchers("/type/{form_id}/category/{category_id}/findstart").permitAll()
-		.antMatchers("/category/{category}").permitAll().antMatchers("/frage/{id}/choices").permitAll()
-		.antMatchers("/filled/forms/all").permitAll().antMatchers("/filled/forms/{form_id}").permitAll()
-		.antMatchers("/filled/forms/add").permitAll().antMatchers("/filled/forms/{form_id}/update").permitAll() 
-		.antMatchers("/filled/forms/{form_id}/delete").permitAll().antMatchers("/filled/forms/{form_id}").permitAll()
-		.antMatchers("/forms/all").permitAll().antMatchers("/downloadFile/{fileId:.+}").permitAll()
-		.antMatchers("/uploadFile/{answerId}").permitAll().antMatchers("/uploadMultipleFiles/{answerId}").permitAll()
-		.antMatchers("/uploadFile/{id}/{answerId}/update").permitAll().antMatchers("/forms/{form_id}/question/{question_id}/answers/add").permitAll()
-		.antMatchers("/forms/{form_id}/question/{question_id}/answers/{answers_id}/edit").permitAll().antMatchers("/forms/{form_id}/question/{question_id}/answers").permitAll()
-		.antMatchers("/forms/{form_id}/answers/all/delete").permitAll().antMatchers("/forms/{form_id}/answers/all/add").permitAll()
-		.antMatchers("/forms/{form_id}/answers/all/edit").permitAll()
-		//.antMatchers("/api/v1/basicauth").permitAll()
-		.anyRequest()
-				.authenticated().and()
-				.httpBasic();
-**/
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -100,27 +54,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 				.httpBasic();
 	}
 	
-	
 }
-
-
-
-
-
-
-
-/**
- * 
- * .antMatchers("/type/{formType}/category/{category}").permitAll()
-		.antMatchers("/type/{form_id}/category/{category_id}/findstart").permitAll()
-		.antMatchers("category/{category}").permitAll()
-		.antMatchers("category/all").permitAll().
- * 
- * 
- */
-
-
-
 
 
 

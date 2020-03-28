@@ -7,17 +7,21 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.Table;
 
+//The starting entity represents a start question of a form for every category, form an question combination. 
+//We also inserted a starting text
 @Entity
 @Table(name="categoryStarter")
 public class Starting {
 
+	//Embeded Id class, that we can have a shared primary key for this entity, to make it unique. 
 	@EmbeddedId
 	private StartingId id;
 	
-
+	//insertable and updatable false, to not have an error 
 	@Column(insertable=false, updatable=false)
 	private Integer formId;
 
+	//insertable and updatable false, to not have an error
 	@Column(insertable=false, updatable=false)
 	private Integer questionCategoryId;
 	

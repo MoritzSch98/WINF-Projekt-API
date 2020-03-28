@@ -17,6 +17,8 @@ import com.example.gewerbeanmeldung.Choices.Choices;
 import com.example.gewerbeanmeldung.Question.Question;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+//The questionType entity. We use it to define the types of questions. We need it, because some types might have multiple answers 
+//for example checkboxes or dropdowns ... Also some need data input ...
 @Entity
 public class QuestionType {
 
@@ -25,19 +27,23 @@ public class QuestionType {
 	@Column(name = "id")
 	private Integer id;
 
+	//this is the default questionId for the default next question. 
 	private Integer defaultWay = 0;
 	
-	//If useDefault == true, look for defaultway, else: we know, choices are existing
+	//If useDefault == true, look for defaultway, else: we know,
+	//choices are existing and we look in choices
 	private boolean useDefault;
 	
 	@NotNull
 	private String type;
 
-
+	//many questiontypes can have many choices. 
+	//Choices are the different options which might be to choose
 	@ManyToMany(cascade = { CascadeType.ALL })
 	@JoinTable(name = "QuestionType_Choices_Relation", joinColumns = @JoinColumn(name = "question_type_id"), inverseJoinColumns = @JoinColumn(name = "choices_id"))
 	private List<Choices> choices;
 
+	//One question can have one question type and vice versa
 	@OneToOne(mappedBy = "questionType", cascade = CascadeType.ALL)
 	@JsonIgnore
 	private Question question;

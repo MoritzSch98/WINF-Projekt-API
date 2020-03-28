@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 
+//This class represents an DatabaseFile entity. It has the needed format, that we can safe files into
+//the database directly. Therefore we create a uuid as id, we have a fileName and fileType. The data is 
+//represente as bytearray. Also we relate the databaseFile to a answer, it's always an answer to a question.
 @Entity
 @Table(name = "files")
 public class DatabaseFile {
@@ -18,11 +21,15 @@ public class DatabaseFile {
 
 	private String fileName;
 
+	//It's defined as one of the valid MediaTypes, which are used in Springboot 
 	private String fileType;
 
+	//Bytearray for the data of the file
 	@Lob
 	private byte[] data;
 
+	//Having a many to one relation between many DatabaseFile entities and an Answer Entity. This is because we 
+	//want to be able to upload for example two pictures as answer to one question
 	@ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name="answers_id", nullable=false)
 	@JsonIgnore

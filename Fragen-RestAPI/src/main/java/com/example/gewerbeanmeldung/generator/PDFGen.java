@@ -17,15 +17,17 @@ import com.itextpdf.layout.element.Paragraph;
 import com.itextpdf.layout.element.Table;
 import com.itextpdf.layout.property.TextAlignment;
 
+//class for generating a pdf out of our input answers from a formfilled. This class is there to create instances 
+//from, so we can't have Autowired files and get the data from the database through it. Thats why we seperated it from
+//the service class
 public class PDFGen {
 
 	private PDFService pdfService;
 	
 	public final String Überschrift = "Ausgefüllter Antrag zur Bearbeitung";
-	 // Gesprächsbedarf 
 	 public String leftTable;
 	 public String rightTable;
-	// /n Absatz
+	
 	public Paragraph _n = new Paragraph("");
 	
 	public byte[] createPdf(String dest2, List<Answers> aList, List<Question> qList, String formname) throws IOException{
@@ -49,7 +51,7 @@ public class PDFGen {
         Paragraph datum = new Paragraph("Eingegangen am" + " " +  currentdatum() + "," + " " + currenttime()); 
         datum.setTextAlignment(TextAlignment.RIGHT);
         document.add(datum);
-       // Setzte drei Absätze
+       
        document.add(_n);
        document.add(_n);
        document.add(_n);
@@ -63,12 +65,7 @@ public class PDFGen {
         
 	}
 	
-	/*
-	 * Erzeugt Tabelle
-	 * 
-	 * @document das Dokument(PDF)
-	 * 
-	 */
+	//creating a table and put in the data we got earlier from db
 	public Document erzeugeTabelle(Document document, List<Answers> aList, List<Question> qList) {
 		// TODO Auto-generated method stub
 		Table table = new Table(2);
@@ -77,15 +74,9 @@ public class PDFGen {
 		return document.add(table);
 	}
 
-	
-	/*
-	 * Erzeugt Überschrift des PDFs 
-	 * 
-	 * @param document das Dokument(PDF)
-	 * 
-	 */
+	//generating the headline of the document
 	private void erzeugeÜberschrift(Document document, String formname) {
-		// TODO Auto-generated method stub
+
 		 Paragraph p1 = new Paragraph(Überschrift); 
 	        p1.setTextAlignment(TextAlignment.CENTER);
 	        p1.setFontSize(14);
@@ -98,6 +89,7 @@ public class PDFGen {
 	     	document.add(p2);
 	}
 	
+	//generating the table with two columns for the data input
 	public Table generateTableWithForm(Table table, List<Answers> aList, List<Question> qList) { 
 		for(int i = 0; i < aList.size(); i++) {
 			table.addCell(qList.get(i).getQuestion());
@@ -129,11 +121,7 @@ public class PDFGen {
 		return table; 
 	}
 	/*
-	 * ruf das aktuelle Datum auf
-	 * 
-	 * @currentdatum das Datum, welches ausgegeben werden soll
-	 * 
-	 * return gibt das aktuelle Datum
+	 *getting the current date of the system
 	 */
 	 public String currentdatum() {
 			 	
@@ -146,11 +134,7 @@ public class PDFGen {
 	 	 
 	 
 	 /*
-	  * gibt die aktuelle Uhrzeit zurück
-	  * 
-	  * @currenttime uhrzeit, welches ausgegeben werden soll
-	  * 
-	  * return die Uhrzeit
+	  * getting the current time of the system. We need it to make right timestamps
 	  * 
 	  */
 	 public String currenttime() {

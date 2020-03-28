@@ -1,5 +1,6 @@
 package com.example.gewerbeanmeldung.bean;
 
+//This is the class for the Authentication message, which is displayed after login. 
 public class AuthenticationBean {
 
 	private String message;

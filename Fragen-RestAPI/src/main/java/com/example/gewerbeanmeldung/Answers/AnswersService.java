@@ -32,6 +32,7 @@ public class AnswersService {
 
 //--------------------- The Get Functions ----------------------------------	
 	
+	//Method getting a Answers Entity by its Id, if nothing found, we return nullpointer exception
 	public Answers getAnswer(Integer answerId) {
 		Answers a = answerRepo.findById(answerId).orElse(null);
 		if(a == null) {
@@ -41,35 +42,47 @@ public class AnswersService {
 		return a;
 	}
 	
-	public List<Answers> getAllAnswers(Integer form_id){
-		FormFilled ff = ffService.getFilledForm(form_id);
+	//Method returning a List of Answers which all belong to one FilledForm Entity
+	public List<Answers> getAllAnswers(Integer formfilled_id){
+		FormFilled ff = ffService.getFilledForm(formfilled_id);
 		return answerRepo.findAllByFormId(ff);		
 	}
 
 //--------------------- The Add Functions ----------------------------------	
 	
-	//Method adding an Answer to the Database
-	public String addAnswer(Answers answer, Integer form_id, Integer question_id) {
+	//Method adding an Answer to the Database, through the answer, formfilled_id(FormFilled id) and questionId it is
+	//a unique answer for a specific FormFilled to one specific question
+	public String addAnswer(Answers answer, Integer formfilled_id, Integer question_id) {
 		FormFilled ff = new FormFilled();
 
-		if(ffService.checkFormExisting(form_id)) {
-			 ff = ffService.getFilledForm(form_id);
+		//Check if the input form exists, if so, we gonna set this filledForm to the answers Entity,
+		//if not, we return that we couldnt perfom the adAnswer method
+		if(ffService.checkFormExisting(formfilled_id)) {
+			 ff = ffService.getFilledForm(formfilled_id);
 			 answer.setFormFilled(ff);
 		}else {
 			return "The form you try to add an answer to, is not existing, please add the form first";
 		}
 
+		//We are checking if there alreay is an answer existing, if so, we return the String shown there
 		if(checkAnswerForQuestionIdExisting(question_id, ff)) {
 			return "this answer is alreay existing for this form. You can't add it twice, but you can edit";
 		}
-		
+		//We check, if the Question itself exists. If Yes, we set the QuestionId if this answer, and we perform 
+		//findAnswerType method, which is finding the answer type. If not, we return that there wasn't
+		//a question to this answer
 		if(qService.checkIfQuestionExists(question_id)) {
 			answer.setQuestion_id(question_id);
 			answer = findAnswerType(answer, question_id);
 		}else {
 			return "This question you try to add an answer to, is not existing!";
 		}
-		
+		/*
+		 * In this part we want to get all AnswerOfAnswers to this specific answer and add it. This 
+		 * part is needed, cause of database relations. We first add the AnswerOfAnswers and only afterwards
+		 * it is possibile to add the answer and than map the AnswerOfAnswers back to the Answers Entity which they
+		 * belong to
+		 */
 		List<AnswerOfAnswers> aoaList = answer.getAoa();
 		if(aoaList != null) {
 			for(int i = 0; i < aoaList.size(); i++) {
@@ -77,34 +90,39 @@ public class AnswersService {
 				aoaService.addAnswerOfAnswers(aoaList.get(i));		
 			}
 		}
-			
+		//Trying to save answers Entity, if it goes wrong, we have the catch part with an error message	
 		try {
 			answerRepo.save(answer);
 		}catch(Exception e) {
 			return e.getMessage();
 		}
+		//In this part we check, if the answer to this question influences the need to display one of the following questions or not.
+		//The changeQuestionFlow method is checking if needed and now returning the questionid for the next question.
 		Integer nextQuestion = changesQuestionFlow(answer, question_id);
 		return "You saved the answer successful, the next Question is the question with the Id: "+ nextQuestion;
 	}
 	
-	//Adding all answers to a specific formtype
-	public String addAllAnswers(List<Answers> answers, Integer form_id) {
+	//Adding all answers to a specific formtype, which basically is always needed, when a person fills a whole form
+	//and sending it to our server.
+	public String addAllAnswers(List<Answers> answers, Integer formfilled_id) {
 		int i = 0;
 		while(i < answers.size()) {
 			String returnMessage;
 			if(answers.get(i).getQuestion_id() == null) {
 				returnMessage = "not savable";
 			}else {
-				returnMessage = addAnswer(answers.get(i), form_id, answers.get(i).getQuestion_id());	
+				returnMessage = addAnswer(answers.get(i), formfilled_id, answers.get(i).getQuestion_id());	
 			}
 			if(!(returnMessage.contains("You saved the answer successful"))) {
-				undoAllSaved(answers,form_id, 0, i);
+				undoAllSaved(answers,formfilled_id, 0, i);
 				return "You cannot save this form, cause you didn't fill everything correct. Check your Inputs.";
 			}
 			i++;
 		}
+		//If we had a successfully try of adding all answers, we are generating a pdf of it. It is also being send as email to the 
+		//personal email address of the input person.
 		try {
-			pdfService.generatePDF(form_id);
+			pdfService.generatePDF(formfilled_id);
 		} catch (IOException e) {
 			return "We saved your inputs, but there was a problem with sending the pdf of it to your mail";
 		}
@@ -112,46 +130,66 @@ public class AnswersService {
 	}
 	
 //--------------------- The Delete Functions ----------------------------------		
-	//Deleting an Answer of a Formfilled 
-	public String deleteAnswerOfFormFilledByFormAndQuestion(Integer form_id, Integer question_id) {
+	
+	//Deleting an Answer of a Formfilled. It is unique identified by question id and formId, which is actually 
+	//formfilled_id, it will be Admin command
+	public String deleteAnswerOfFormFilledByFormAndQuestion(Integer formfilled_id, Integer question_id) {
 		
-		Answers a = findAnswerByQuestionIdAndFilledFormId(question_id, form_id);
+		//Finding the answer
+		Answers a = findAnswerByQuestionIdAndFilledFormId(question_id, formfilled_id);
+		//if we have a fileupload as an answer to this question, 
+		//we also need to delete the file to save database space
 		if(a.getAnswerType().equals("fileanswer")){
 			dbService.deleteFileByAnswerId(a);
 		}
+		//actual delete of the Answer
 		deleteAnswerOfFormFilled(a);	
 		return "answer deleted";
 	}
 	
-	//Delete all Answers of a QuestionId
+	//Delete all Answers of a QuestionId by looping through all answers of a questionId, this
+	//is important, if we decide to delete a specific question of a form
 	public String deleteAllAnswersOfQuestionId(Integer question_id) {
+		
+		//find all answers of a question ID
 		List<Answers> aList = answerRepo.findAllByQuestionId(question_id);
 		for(int i = 0; i < aList.size(); i++) {
 			if(aList.get(i).getAnswerType().equals("fileanswer")){
+				//if we have a fileupload as an answer to this question, 
+				//we also need to delete the file to save database space
 				dbService.deleteFileByAnswerId(aList.get(i));
 			}
+			//actual delete of the Answer
 			deleteAnswerOfFormFilled(aList.get(i));
 		}
 		return "You deleted all Answers which have been belonging to the questionId: " + question_id;
 	}
 	
-	//Deleting an Answer of a Formfilled 
+	//Deleting an Answer of a Formfilled is the actual delete command through the answer entity as input
 	public String deleteAnswerOfFormFilled(Answers answer) {
 	
+		//deleting all answerOfAnswers to this answer. There exists at least one, if we are not having a 
+		//file or dateanswer. Also if there is just a single answer to a question its displayed in AOA to
+		//be able to also choose multiple answers
+		//we need to delete aoa seperately, cause of database relations
 		for(int i = 0; i < answer.getAoa().size(); i++) {
 			aoaService.deleteAnswerOfAnswers(answer.getAoa().get(i));
 		}
+		//if we have a fileupload as an answer to this question, 
+		//we also need to delete the file to save database space
+		//some bugs make it necessary, that here we also need the file deleting
 		if(answer.getAnswerType().equals("fileanswer")){
 			dbService.deleteFileByAnswerId(answer);
 		}
+		//finally deleting the answer
 		answerRepo.delete(answer);
 		
 		return "answer deleted";
 	}
 	
-	//Delete all Answers
-	public String deleteAllAnswersOfFormFilled(Integer form_id) {
-		List<Answers> a = getAllAnswers(form_id);
+	//Delete all Answers just loops through deleting answer process
+	public String deleteAllAnswersOfFormFilled(Integer formfilled_id) {
+		List<Answers> a = getAllAnswers(formfilled_id);
 		for(int i = 0; i < a.size(); i++) {
 			deleteAnswerOfFormFilled(a.get(i));
 		}
@@ -160,30 +198,36 @@ public class AnswersService {
 	
 	//This method is used, if we couldn't save all the answers out of some reason. We then want all already 
 	//made inserts to be deleted. We can also delete all Answers of a form with this function
-	private void undoAllSaved(List<Answers> answers, int form_id, int start, int end) {
+	private void undoAllSaved(List<Answers> answers, int formfilled_id, int start, int end) {
 		for(int i = start; i < end; i++) {
-			answers.get(i).setFormFilled(ffService.getFilledForm(form_id));
+			answers.get(i).setFormFilled(ffService.getFilledForm(formfilled_id));
 			deleteAnswerOfFormFilled(answers.get(i));
 		}
 	} 
 	
 //--------------------- The Edit Functions ----------------------------------	
 	
-	//Edit all answers to a specific formtype
-	public String editAllAnswers(List<Answers> answers, Integer form_id) {
+	//Edit all answers of a specific filled form. When a user wants to change his inputs
+	public String editAllAnswers(List<Answers> answers, Integer formfilled_id) {
 		int i = 0;
 		while(i < answers.size()) {
 			String returnMessage;
+			//If there is a question id in it, which is not existing, we want to return error. Usually it
+			//can't be possible but we had this issue in checking once, so we made this part of code. 
 			if(answers.get(i).getQuestion_id() == null) {
 				returnMessage = "not editable";
-			}else {
-				FormFilled ff = ffService.getFilledForm(form_id);
-				Answers a = answerRepo.findByQuestionId(answers.get(i).getQuestion_id(), ff);
-				returnMessage = updateAnswer(answers.get(i), form_id, answers.get(i).getQuestion_id(), a.getId());	
-			}
 			
+			// getting the formfilled, getting the answers entity and starting 
+			//the updateanswer for each answers entity
+			}else {
+				FormFilled ff = ffService.getFilledForm(formfilled_id);
+				Answers a = answerRepo.findByQuestionId(answers.get(i).getQuestion_id(), ff);
+				returnMessage = updateAnswer(answers.get(i), formfilled_id, answers.get(i).getQuestion_id(), a.getId());	
+			}
+			//we edit everything, sometimes an answer is missing or is optional 
+			//and now empty, then we have to undo all old ones
 			if(!(returnMessage.contains("You edited the answer successful"))) {
-				undoAllSaved(answers,form_id, 0, i);
+				undoAllSaved(answers,formfilled_id, 0, i);
 				return returnMessage;
 			}
 			
@@ -194,40 +238,53 @@ public class AnswersService {
 	}
 
 	
-	//Method updating an existing answer
-	public String updateAnswer(Answers answer, Integer form_id, Integer question_id, Integer answer_id) {
+	//Method updating a single answer
+	public String updateAnswer(Answers answer, Integer formfilled_id, Integer question_id, Integer answer_id) {
 		FormFilled ff = new FormFilled();
 
-		if(ffService.checkFormExisting(form_id)) {
-			 ff = ffService.getFilledForm(form_id);
+		//checking if formfilled exists
+		if(ffService.checkFormExisting(formfilled_id)) {
+			 ff = ffService.getFilledForm(formfilled_id);
 			 answer.setFormFilled(ff);
 		}else {
 			return "The form you try to add an answer to, is not existing, please add the form first";
 		}
+		//check, if question exists
 		if(qService.checkIfQuestionExists(question_id)) {
 			answer.setQuestion_id(question_id);
 			answer = findAnswerType(answer, question_id);
 		}else {
 			return "This question you try to add an answer to, is not existing!";
 		}
+		//getting all aoa's that we can update them as well. We need to do this due to database constraint violations
 		List<AnswerOfAnswers> aoaList = updateAnswerOfAnswersFromAnswer(answer, answer_id);
+		//setting answerId, that we can safe afterwards at the right place into the database and not as
+		//new entity
 		answer.setId(answer_id);
 		try {
 			answerRepo.save(answer);
 		}catch(Exception e) {
 			return e.getMessage();
 		}
+		//Sets the answerOfAnswers
 		answer.setAoa(aoaList);
+		
+		//In this part we check, if the answer to this question influences the need to display one of the following questions or not.
+		//The changeQuestionFlow method is checking if needed and now returning the questionid for the next question.
 		Integer nextQuestion = changesQuestionFlow(answer, question_id);
 		return "You edited the answer successful, the next Question is the question with the Id: "+ nextQuestion;
 		
 	}
 	
-	//update answerofAnswers of a answer 
+	//update AnswerOfAnswers of a answer 
 	public List<AnswerOfAnswers> updateAnswerOfAnswersFromAnswer(Answers answer, Integer answer_id) {
+		//saving new answerOfAnswers
 		List<AnswerOfAnswers> aoa_new = answer.getAoa();
+		//saving old answerOfAnswers
 		List<AnswerOfAnswers> aoa_old = aoaService.getAllAnswerOfAnswersByAnswerId(answer_id);
 
+		//Checks if the amount of aoa changed after edit and then adjusting it corrctly by removing old,
+		//or update old if necessary. 
 		int newSize = aoa_new.size();
 		int oldSize = aoa_old.size();
 		int removeCount = 0;
@@ -235,13 +292,9 @@ public class AnswersService {
 		while(i < newSize-removeCount) {
 			int j = 0;
 			while(j < oldSize-removeCount) {
-				System.out.println(aoa_new.get(i).getAnswer());
-				System.out.println(aoa_old.get(j).getAnswer());
 				if(aoa_new.get(i).getAnswer().equals(aoa_old.get(j).getAnswer())){
 					aoa_old.remove(j);
-					aoa_new.remove(i);
-					
-					
+					aoa_new.remove(i);			
 				}
 				j++;
 			}
@@ -254,10 +307,12 @@ public class AnswersService {
 			aoa_old.remove(0);
 			aoa_new.remove(0);
 		}
+		//if we have more aoa_new than old ones
 		if (aoa_new.size() != 0) {
 			for(int x = 0; x < aoa_new.size(); x++) {
 				aoaService.addAnswerOfAnswers(aoa_new.get(x));
 			}
+		//if we have more aoa_old than new ones	
 		}else if(aoa_old.size() != 0){
 			for(int x = 0; x < aoa_old.size(); x++) {
 				aoaService.deleteAnswerOfAnswers(aoa_old.get(x));
@@ -330,8 +385,8 @@ public class AnswersService {
 	
 	
 	//Method returns the answer by question id and ff id
-	public Answers findAnswerByQuestionIdAndFilledFormId(Integer question_id, Integer filledform_id) {
-		FormFilled ff = ffService.getFilledForm(filledform_id);
+	public Answers findAnswerByQuestionIdAndFilledFormId(Integer question_id, Integer formfilled_id) {
+		FormFilled ff = ffService.getFilledForm(formfilled_id);
 		return answerRepo.findByQuestionId(question_id, ff);
 	}
 	

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.gewerbeanmeldung.Question.Question;
 
+//Filled form Controller, here we make the requests for interacting with the frontend
 @CrossOrigin(origins="https://veranstaltungsformular.firebaseapp.com")
 @RestController
 @RequestMapping(path = "")
@@ -40,14 +41,14 @@ public class FormFilledController {
 	
 	
 	//Update
-	@RequestMapping(method = RequestMethod.PUT, path = "/filled/forms/{form_id}/update")
-	public void updateFormFilled(@RequestBody FormFilled formFilled, @PathVariable Integer form_id) {
-		formFilledService.updateFormFilled(form_id ,formFilled);
+	@RequestMapping(method = RequestMethod.PUT, path = "/filled/forms/{formfilled_id}/update")
+	public void updateFormFilled(@RequestBody FormFilled formFilled, @PathVariable Integer formfilled_id) {
+		formFilledService.updateFormFilled(formfilled_id ,formFilled);
 	}
 	
 	//Delete
-	@RequestMapping(method = RequestMethod.DELETE, path = "/filled/forms/{form_id}/delete")
-	public void deletFormFilled(@PathVariable Integer form_id) {
-		formFilledService.deleteFormFilled(form_id);
+	@RequestMapping(method = RequestMethod.DELETE, path = "/filled/forms/{formfilled_id}/delete")
+	public void deletFormFilled(@PathVariable Integer formfilled_id) {
+		formFilledService.deleteFormFilled(formfilled_id);
 	}	
 }

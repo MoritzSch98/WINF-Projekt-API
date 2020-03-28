@@ -6,6 +6,7 @@ import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
+//Id class to make a shared primary key for the starting class between categoryid and formid
 @Embeddable
 public class StartingId implements Serializable{
 
@@ -27,7 +28,7 @@ public class StartingId implements Serializable{
 	}
 	
 	
-	
+	//override equals method. That it is actually used correctly, when creating an instance
 	@Override
     public boolean equals(Object o) {
 		if (this == o) return true;
@@ -40,6 +41,7 @@ public class StartingId implements Serializable{
                Objects.equals(questionCategoryId, that.questionCategoryId);
     }
 
+	//override hashcode method. That it is actually used correctly, when creating an instance
     @Override
     public int hashCode() {
         return Objects.hash(formId,questionCategoryId);

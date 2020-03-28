@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+//This is the Controller for file upload, edit requests, which will directed to the DatabaseFileService and than executed!
 @CrossOrigin(origins="https://veranstaltungsformular.firebaseapp.com")
 @RestController
 public class FileUploadController {
@@ -22,31 +23,39 @@ public class FileUploadController {
     @Autowired
     private DatabaseFileService fileStorageService;
 
-    @PostMapping("/uploadFile/filled/{form_id}/question/{question_id}")
-    public Response uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Integer form_id, @PathVariable Integer question_id) {
-    	DatabaseFile fileName = fileStorageService.storeFile(file, form_id, question_id);
-
+    //uploading a file with parameters formfilled_id(formfilled) and question_id. This both make it possible to generate
+    //the answer where the file belongs to. This makes it easier for the frontend dev to integrate the file
+    //upload
+    @PostMapping("/uploadFile/filled/{formfilled_id}/question/{question_id}")
+    public Response uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Integer formfilled_id, @PathVariable Integer question_id) {
+    	DatabaseFile fileName = fileStorageService.storeFile(file, formfilled_id, question_id);
+    	
+    	//Creating the filedownloaduri
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath()
                 .path("/downloadFile/")
                 .path(fileName.getFileName())
                 .toUriString();
 
+        //Return the file with its belongings as success
         return new Response(fileName.getFileName(), fileDownloadUri,
                 file.getContentType(), file.getSize());
     }
 
-    @PostMapping("/uploadMultipleFiles/filled/{form_id}/question/{question_id}")
-    public List<Response> uploadMultipleFiles(@PathVariable Integer form_id, @PathVariable Integer question_id, @RequestParam("files") MultipartFile[] files) {
+    //Uploading multiple files, actually just making multiple single upload request after another, using java 8 collections for 
+    //looping through array
+    @PostMapping("/uploadMultipleFiles/filled/{formfilled_id}/question/{question_id}")
+    public List<Response> uploadMultipleFiles(@PathVariable Integer formfilled_id, @PathVariable Integer question_id, @RequestParam("files") MultipartFile[] files) {
         return Arrays.asList(files)
                 .stream()
-                .map(file -> uploadFile(file, form_id, question_id))
+                .map(file -> uploadFile(file, formfilled_id, question_id))
                 .collect(Collectors.toList());
     }
     
-    @RequestMapping(method = RequestMethod.PUT, path = "/uploadFile/{id}/filled/{form_id}/question/{question_id}/update")
-    public String updateFile(@RequestParam("file") MultipartFile file, @PathVariable Integer form_id, @PathVariable Integer question_id, @PathVariable String id) {
-    	fileStorageService.updateFile(id, file, form_id, question_id);
+    //method editing an exsting file. We actually delete the old one and create a new one in behind, visible
+    //in service class
+    @RequestMapping(method = RequestMethod.PUT, path = "/uploadFile/{id}/filled/{formfilled_id}/question/{question_id}/update")
+    public String updateFile(@RequestParam("file") MultipartFile file, @PathVariable Integer formfilled_id, @PathVariable Integer question_id, @PathVariable String id) {
+    	fileStorageService.updateFile(id, file, formfilled_id, question_id);
 		return id;
     }
-    // im Service eine Lösch methode 
 }

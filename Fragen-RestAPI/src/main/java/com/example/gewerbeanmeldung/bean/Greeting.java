@@ -1,5 +1,6 @@
 package com.example.gewerbeanmeldung.bean;
 
+//This is a class to generate a greeting. 
 public class Greeting {
 	private final long id;
 	private final String content;

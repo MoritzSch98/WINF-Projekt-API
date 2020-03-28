@@ -18,7 +18,6 @@ import com.example.gewerbeanmeldung.FormFilled.FormFilledService;
 import com.example.gewerbeanmeldung.Question.Question;
 import com.example.gewerbeanmeldung.Question.QuestionService;
 import com.example.gewerbeanmeldung.form.FormService;
-import com.example.gewerbeanmeldung.pdffile.PdfFileService;
 import com.itextpdf.layout.Document;
 
 @Service
@@ -30,31 +29,37 @@ public class PDFService {
 	private FormService fService;
 	@Autowired
 	private QuestionService qService;
-	@Autowired
-	private PdfFileService pdffService;
 	
-	
+	//generating the pdf apropriately and send an email
 	public String generatePDF(Integer fId) throws IOException{
+		//getting filename
 		String filename = generateFilename(fId);
+		//crating a file on it's destination
 		String DEST = "savedforms/"+filename+".pdf";
 		 File file = new File(DEST);
 	        file.getParentFile().mkdirs();
+	        //getting the lists of answers and questions, that we can late loop through them and put them into
+	        //our table on the pdf
 	        List<Answers> aList = getAllAnswers(fId);
 	        List<Question> qList = getAllQuestions(fId);
 	        
+	        //getting the formname
 	        String formname = fService.getFormById(ffService.getFilledForm(fId).getForm()).getFormname();
-	        
+	        //getting the bytearray of the pdf
 	        byte[] d = new PDFGen().createPdf(DEST, aList, qList, formname);
-	        pdffService.storeFile(d, fId, filename);
+	      
+	        //send pdf as email
 	        SendEmail.sendmail(DEST);
 	        
 	        return "Success";
 	}
 	
+	//getting all answers from ffService (formfilled)
 	public List<Answers> getAllAnswers(Integer form_id){
 		return ffService.getFilledForm(form_id).getAllAnswers();
 	}
 	
+	//getting all questions belonging to the answers we have in getAllAnswers method
 	public List<Question> getAllQuestions(Integer form_id){
 		FormFilled ff = ffService.getFilledForm(form_id);
 		List<Question> qList = new ArrayList<Question>();
@@ -66,6 +71,7 @@ public class PDFService {
 		return qList;
 	}
 	
+	//Generating the finename, making it unique though timestamp
 	private String generateFilename(Integer form_id) {
 		FormFilled ff = ffService.getFilledForm(form_id);
 		String person = ff.getFillingPerson();
@@ -74,6 +80,7 @@ public class PDFService {
 		return form+"_"+time+"_"+person;	
 	}
 	
+	//getting the current time using date
 	private String getCurrentTimeUsingDate() {
 	    Date date = new Date();
 	    String strDateFormat = "yyyy:MM:dd:hh:mm:ss a";

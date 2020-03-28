@@ -1,19 +1,13 @@
 package com.example.gewerbeanmeldung.form;
 
-
-import java.util.List;
-
-import javax.persistence.CascadeType;
+//This class is the form entity. It is representing a table within the database, that enables us to create lots 
+//of different forms for every kind of form-filling process imaginable.  Just having a name and an id. 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.validation.constraints.NotNull;
-
-import com.example.gewerbeanmeldung.FormFilled.FormFilled;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Entity

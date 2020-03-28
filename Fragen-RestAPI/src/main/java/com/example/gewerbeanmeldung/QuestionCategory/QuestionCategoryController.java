@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.gewerbeanmeldung.Question.Question;
-
+//Controller for the question Categorys
 @CrossOrigin(origins="https://veranstaltungsformular.firebaseapp.com")
 @RestController
 @RequestMapping(path = "")
@@ -24,6 +24,7 @@ public class QuestionCategoryController {
 		return questionCategoryService.getQuestionByCategoryId(category_id);
 	}
 	
+	//List of all categories
 	@RequestMapping(path = "/category/all")
 	public List<QuestionCategory> getAllCategories() {
 		return questionCategoryService.getAllCategories();

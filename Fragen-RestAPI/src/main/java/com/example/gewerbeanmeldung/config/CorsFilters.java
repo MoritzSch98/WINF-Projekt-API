@@ -9,7 +9,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
+//This is a configuration class. We are configuring, for which domains we allow Cross Origin commands and 
+//set where we need authentication.
 @Component
 public class CorsFilters extends OncePerRequestFilter {
 

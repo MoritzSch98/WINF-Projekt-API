@@ -15,7 +15,10 @@ import javax.validation.constraints.NotNull;
 
 import com.example.gewerbeanmeldung.Question.*;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
+/*
+ * QuestionCategory entity. This defines categories for the questions. A question can have multiple categories
+ *and a category can have multiple questions. Category is something like: (Gewerbeanmeldung)-> Form, (Kleingewerbe anmelden) -> Category
+ */
 @Entity
 @Table(name = "question_category")
 public class QuestionCategory {

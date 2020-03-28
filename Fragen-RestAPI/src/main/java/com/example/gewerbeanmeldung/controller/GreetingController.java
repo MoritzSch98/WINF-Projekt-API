@@ -1,5 +1,6 @@
 package com.example.gewerbeanmeldung.controller;
 
+//This is the Controller, which is letting you perform requests for testing purpose. 
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -20,30 +21,15 @@ public class GreetingController {
 	public String template = "Hello, %s!";
 	private final AtomicLong counter = new AtomicLong();
 
-	 
+	//returns the greeting.
 	@RequestMapping("/greeting")
 	public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
 		return new Greeting(counter.incrementAndGet(), String.format(template, name));
 	}
-
+	
 	@RequestMapping(method = RequestMethod.POST, value = "/moinsen")
 	public String saveQuestions() {
 		this.template = "Hello Jonas, %s!";
 		return "Moinsen";
 	}
 }
-/** 
-@CrossOrigin(origins = "http://localhost:4200")
-@RestController
-@RequestMapping("/api/v1")
-public class GreetingController {
-
-	private static final String template = "Hello, %s!";
-	private final AtomicLong counter = new AtomicLong();
-
-	 
-	@RequestMapping("/greeting")
-	public Greeting greeting(@RequestParam(value = "name", defaultValue = "World") String name) {
-		return new Greeting(counter.incrementAndGet(), String.format(template, name));
-	}
-}*/

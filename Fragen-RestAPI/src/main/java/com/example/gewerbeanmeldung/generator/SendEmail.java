@@ -19,7 +19,7 @@ import javax.mail.internet.MimeMultipart;
 
 public class SendEmail {
 
-	
+	//Sending an email to a destination via smtp
 	public static void sendmail(String DEST) {
 		 final String username = "server.transport.mail@gmail.com";
 	        final String password = "Seilbahn";
@@ -28,9 +28,9 @@ public class SendEmail {
 			prop.put("mail.smtp.host", "smtp.gmail.com");
 	        prop.put("mail.smtp.port", "587");
 	        prop.put("mail.smtp.auth", "true");
-	        prop.put("mail.smtp.starttls.enable", "true"); //verschlüsselte Übertragung über TLS 
+	        prop.put("mail.smtp.starttls.enable", "true"); //encrypted data via TLS 
 	        
-	        
+	        //Authenticating in session to log into mail
 	        Session session = Session.getInstance(prop,
 	                new javax.mail.Authenticator() {
 	                    protected PasswordAuthentication getPasswordAuthentication() {
@@ -38,7 +38,7 @@ public class SendEmail {
 	                    }
 	                });
 
-	        
+	        //creating a message
 	        try {
 
 	            Message message = new MimeMessage(session);

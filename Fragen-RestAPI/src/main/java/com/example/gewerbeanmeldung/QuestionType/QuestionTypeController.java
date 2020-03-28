@@ -10,9 +10,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.gewerbeanmeldung.Choices.Choices;
 
+//The questionType controller actually just need to list all choices of a questiontype. All other options a
+//we already check in questionController
 @CrossOrigin(origins="https://veranstaltungsformular.firebaseapp.com")
 @RestController
-@RequestMapping(path = "/frage")
+@RequestMapping(path = "/fragen")
 public class QuestionTypeController {
 
 	@Autowired

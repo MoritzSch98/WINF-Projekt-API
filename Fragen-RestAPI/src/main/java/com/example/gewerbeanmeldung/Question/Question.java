@@ -19,6 +19,8 @@ import com.example.gewerbeanmeldung.QuestionCategory.QuestionCategory;
 import com.example.gewerbeanmeldung.QuestionType.QuestionType;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
+//The question enity. Every Question, which is saved in the question table of the database is
+//generated through this class. 
 @Entity
 public class Question {
 
@@ -29,23 +31,46 @@ public class Question {
 	@NotNull
 	private String question;
 
+	/*
+	 * Every question has a questionType. The questionType is for example: Datum, File-Upload, Multiple Choice,
+	 * Text-Input usw..
+	 * We made a one to one relation, because a question just can have one type
+	 */
 	@NotNull
 	@OneToOne(cascade = CascadeType.ALL)
 	@MapsId
 	private QuestionType questionType;
 	
+	/*
+	 * We need mandatory attribute to check, if this question is optional or mandatory
+	 */
 	@NotNull
 	private boolean mandatory;
 	
+	
+	/*
+	 * We need this Id, if there is an answer to a question very early in the dialogue, which could have
+	 *influence on a question very later in the dialogue. The later one has the lookback_id to first one 
+	 *so we check the first answer to see the later question
+	 */
 	private Integer lookbackId = 0;
 
+	/*
+	 * Hint message
+	 */
 	@Column(length=1000)
 	private String hint;
 	
+	/*
+	 * Which formType the question is from. 
+	 */
 	@NotNull
 	private String formType;
 
-	
+	/*
+	 * A question can have multiple categories. We want to be able to categorize all questions to make
+	 * a better overview
+	 */
 	@NotNull
 	@ManyToMany(cascade = { CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
 	@JoinTable(name = "Question_Category_Relation", joinColumns = @JoinColumn(name = "question_id"), inverseJoinColumns = @JoinColumn(name = "category_id"))

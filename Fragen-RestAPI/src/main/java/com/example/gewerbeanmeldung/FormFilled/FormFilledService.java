@@ -10,6 +10,7 @@ import com.example.gewerbeanmeldung.Question.Question;
 import com.example.gewerbeanmeldung.form.Form;
 import com.example.gewerbeanmeldung.form.FormService;
 
+//The service class for formFilled, here we have all logical methods for formFilled entity. 
 @Service
 public class FormFilledService {
 
@@ -19,13 +20,14 @@ public class FormFilledService {
 	private FormService formService;
 
 
+	//Getting a list of all filled forms
 	public List<FormFilled> getAllFilledForms() {
 		List<FormFilled> fforms = new ArrayList<>();
 		formsFilledRepo.findAll().forEach(fforms::add);
 		return fforms;
 	}
 
-
+	//adding a filled form
 	public FormFilled addFormFilled(FormFilled formFilled) {
 		for(int i = 0; i < formFilled.getAllAnswers().size(); i++) {
 			formFilled.getAllAnswers().get(i).setFormFilled(formFilled);
@@ -34,24 +36,25 @@ public class FormFilledService {
 		return formsFilledRepo.save(formFilled);
 	}
 
-
-	public FormFilled getFilledForm(Integer form_id) {
-		return	formsFilledRepo.findById(form_id).orElse(null);
+	//getting a filledform by its id
+	public FormFilled getFilledForm(Integer formfilled_id) {
+		return	formsFilledRepo.findById(formfilled_id).orElse(null);
 	}
 	
-	public boolean checkFormExisting(Integer form_id) {
-		return formsFilledRepo.existsById(form_id);
+	//checking if a form to a filledform exists, through form parameter
+	public boolean checkFormExisting(Integer formfilled_id) {
+		return formsFilledRepo.existsById(formfilled_id);
 	}
 
 
-	
-	public void updateFormFilled(Integer form_id, FormFilled formFilled) {
-		formFilled.setId(form_id);
+	//updating a filledform by id and filledForm entity
+	public void updateFormFilled(Integer formfilled_id, FormFilled formFilled) {
+		formFilled.setId(formfilled_id);
 		formsFilledRepo.save(formFilled);
 	}
 
-
-	public void deleteFormFilled(Integer form_id) {
-		formsFilledRepo.deleteById(form_id);
+	//deleting a filledForm
+	public void deleteFormFilled(Integer formfilled_id) {
+		formsFilledRepo.deleteById(formfilled_id);
 	}
 }

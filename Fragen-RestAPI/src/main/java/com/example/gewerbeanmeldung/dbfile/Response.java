@@ -1,6 +1,6 @@
 package com.example.gewerbeanmeldung.dbfile;
 
-
+//Response entity
 public class Response {
     private String fileName;
     private String fileDownloadUri;
